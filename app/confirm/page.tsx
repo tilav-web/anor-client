@@ -1,7 +1,7 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import userService from '../../services/user.service';
 
-export default function ConfirmPage() {
+function Confirm() {
   const [otp, setOtp] = useState('');
   const searchParams = useSearchParams();
   const recipient = searchParams.get('recipient');
@@ -97,5 +97,13 @@ export default function ConfirmPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function ConfirmPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Confirm />
+    </Suspense>
   );
 }
