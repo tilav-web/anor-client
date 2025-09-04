@@ -3,7 +3,7 @@ import { User } from "../types/user";
 
 class UserService {
   sendConfirmationCode(recipient: string, type: "email" | "phone") {
-    return api.post("/auth/register", { recipient, type });
+    return api.post("/users/register", { recipient, type });
   }
 
   confirmRegistration(
