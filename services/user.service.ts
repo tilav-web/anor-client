@@ -11,15 +11,15 @@ class UserService {
     code: string,
     user: Omit<User, "balance" | "role">
   ) {
-    return api.post("/auth/confirm", { recipient, code, user });
+    return api.post("/users/confirm", { recipient, code, user });
   }
 
   login(data: any) {
-    return api.post("/auth/login", data);
+    return api.post("/users/login", data);
   }
 
   getMe() {
-    return api.get("/auth/me");
+    return api.get("/users/me");
   }
 }
 
