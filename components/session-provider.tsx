@@ -18,9 +18,9 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
     (async () => {
       try {
-        const res = await userService.getMe();
+        const data = await userService.getMe();
         // On success, set the user data in the store.
-        setUser(res.data.user);
+        setUser(data.user);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         // On failure (e.g., 401 Unauthorized), set user to null.
