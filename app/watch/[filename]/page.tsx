@@ -72,18 +72,9 @@ export default function WatchPage() {
         setVideo(fetchedVideo);
 
         // Fetch video stream with authorization
-        const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
-        if (!token) {
-          setError('Autentifikatsiya tokeni topilmadi. Iltimos, qayta kiring.');
-          setLoading(false);
-          return;
-        }
-
         const streamUrl = `${API_URL}/video-stream/stream/${fetchedVideo.url.split('/').pop()}`;
         const response = await fetch(streamUrl, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          credentials: 'include',
         });
 
         if (!response.ok) {

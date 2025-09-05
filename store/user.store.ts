@@ -1,23 +1,28 @@
 import { User } from "@/types/user";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import UserService from "@/services/user.service";
 
 interface UserStore {
   user: User | null | undefined;
+  loading: boolean;
   setUser: (user: User | null) => void;
   clearUser: () => void;
+  initializeUser: () => Promise<void>;
 }
 
-export const useUserStore = create<UserStore>()(
-  persist(
-    (set) => ({
-      user: undefined,
-      setUser: (user: User | null) => set({ user }),
-      clearUser: () => set({ user: null }),
-    }),
-    {
-      name: "user-storage", // unique name
-      getStorage: () => localStorage, // use localStorage for persistence
+export const useUserStore = create<UserStore>((set) => ({
+  user: undefined,
+  loading: true, // Initial loading state
+  setUser: (user: User | null) => set({ user }),
+  clearUser: () => set({ user: null }),
+  initializeUser: async () => {
+    set({ loading: true });
+    try {
+      const user = await UserService.getMe();
+      set({ user, loading: false });
+    } catch (error) {
+      console.error("Failed to initialize user:", error);
+      set({ user: null, loading: false });
     }
-  )
-);
+  },
+}));
