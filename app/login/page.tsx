@@ -38,7 +38,6 @@ export default function LoginPage() {
     };
     try {
       const response = await userService.login(data);
-      console.log("Login successful", response);
       const { user } = response;
       setUser(user);
 
