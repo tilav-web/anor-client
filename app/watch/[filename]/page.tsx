@@ -1,7 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useUserStore } from '@/store/user.store';
+import VideoService from '@/services/video.service';
+import { Video } from '@/types/video';
 
 // Basic styling for the page and to discourage screenshots
 const pageStyles: React.CSSProperties = {
@@ -13,6 +16,7 @@ const pageStyles: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   overflow: 'hidden',
+  color: 'white', // For text messages
 };
 
 const overlayStyles: React.CSSProperties = {
@@ -42,11 +46,41 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.uygunlik.uz';
 
 export default function WatchPage() {
   const { filename } = useParams();
-  const videoUrl = filename ? `${API_URL}/video-stream/stream/${filename}` : '';
+  const router = useRouter();
+  const { user, loading: userLoading } = useUserStore();
+
+  const [video, setVideo] = useState<Video | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const videoStreamUrl = video ? `${API_URL}/video-stream/stream/${video.url.split('/').pop()}` : '';
 
   useEffect(() => {
-    // This is a deterrent, not a foolproof solution.
-    // It tries to disable context menu and some keyboard shortcuts.
+    if (userLoading) {
+      return; // Wait for user store to load
+    }
+
+    if (!user) {
+      router.push('/login'); // Redirect to login if not authenticated
+      return;
+    }
+
+    const fetchVideo = async () => {
+      try {
+        // Assuming filename from URL is the video ID
+        const fetchedVideo = await VideoService.findOne(filename as string);
+        setVideo(fetchedVideo);
+      } catch (err) {
+        console.error('Failed to fetch video:', err);
+        setError('Videoni yuklashda xato yuz berdi. Iltimos, qayta urinib ko\'ring.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideo();
+
+    // DRM deterrents (not foolproof)
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
@@ -58,7 +92,7 @@ export default function WatchPage() {
         e.key === 'F12'
       ) {
         e.preventDefault();
-        // alert('This action is disabled.');
+        // alert('This action is disabled.'); // Optional: alert user
       }
     };
 
@@ -69,15 +103,42 @@ export default function WatchPage() {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [filename, user, userLoading, router]);
+
+  if (loading) {
+    return (
+      <div style={pageStyles}>
+        <p>Video yuklanmoqda...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={pageStyles}>
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (!video) {
+    return (
+      <div style={pageStyles}>
+        <p>Video topilmadi.</p>
+      </div>
+    );
+  }
 
   return (
     <div style={pageStyles}>
       <div style={overlayStyles} />
       <div style={videoContainerStyles}>
-        {videoUrl && (
-            <video src={videoUrl} style={videoStyles} controls controlsList="nodownload" />
+        {videoStreamUrl && (
+            <video src={videoStreamUrl} style={videoStyles} controls controlsList="nodownload" />
         )}
+      </div>
+      <div style={{ position: 'absolute', bottom: 20, left: 20, right: 20, textAlign: 'center', fontSize: '0.8em', color: 'rgba(255,255,255,0.7)', zIndex: 20 }}>
+        <p>Eslatma: Ekranni yozib olish va skrinshot qilishga qarshi choralar ko'rilgan bo'lsa-da, bu to'liq himoya emas. Kontentni ruxsatsiz tarqatish qonun bilan taqiqlanadi.</p>
       </div>
     </div>
   );
