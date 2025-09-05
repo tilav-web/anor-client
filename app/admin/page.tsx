@@ -65,6 +65,7 @@ import { Video } from "@/types/video";
 import { VideoCombobox } from "@/components/ui/video-combobox";
 import { CourseCombobox } from "@/components/ui/course-combobox";
 import { useDebounce } from "@/hooks/use-debounce"; // Import useDebounce
+import Link from 'next/link';
 
 export default function AdminPage() {
   const { user } = useUserStore();
@@ -923,14 +924,12 @@ export default function AdminPage() {
                           <TableCell className="font-medium">{video.title}</TableCell>
                           <TableCell>{video.description}</TableCell>
                           <TableCell>
-                            <a
-                              href={`http://localhost:5000/${video.url}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                            >
-                              Ko'rish
-                            </a>
+                            <Link href={`/watch/${video.url.split('/').pop()}`}>
+                              <Button variant="outline" size="sm">
+                                <Eye className="h-4 w-4 mr-1" />
+                                Ko'rish
+                              </Button>
+                            </Link>
                           </TableCell>
                           <TableCell className="text-right">
                             <Button
