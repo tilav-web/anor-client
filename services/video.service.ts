@@ -40,6 +40,11 @@ class VideoService {
     return response.data;
   }
 
+  async findByFilename(filename: string): Promise<Video> {
+    const response = await api.get(`/videos/by-filename/${filename}`);
+    return response.data;
+  }
+
   async update(id: string, updateVideoDto: UpdateVideoDto): Promise<Video> {
     const response = await api.patch(`/videos/${id}`, updateVideoDto);
     return response.data;

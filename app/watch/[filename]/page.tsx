@@ -68,7 +68,7 @@ export default function WatchPage() {
     const fetchVideo = async () => {
       try {
         // Assuming filename from URL is the video ID
-        const fetchedVideo = await VideoService.findOne(filename as string);
+        const fetchedVideo = await VideoService.findByFilename(filename as string);
         setVideo(fetchedVideo);
       } catch (err) {
         console.error('Failed to fetch video:', err);
