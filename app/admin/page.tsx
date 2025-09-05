@@ -51,12 +51,20 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import CourseService, { CreateCourseDto, UpdateCourseDto } from "@/services/course.service";
-import VideoService, { CreateVideoDto, UpdateVideoDto } from "@/services/video.service";
+import CourseService, {
+  CreateCourseDto,
+  UpdateCourseDto,
+} from "@/services/course.service";
+import VideoService, {
+  CreateVideoDto,
+  UpdateVideoDto,
+} from "@/services/video.service";
+import UserService from "@/services/user.service"; // Import UserService
 import { Course } from "@/types/course";
 import { Video } from "@/types/video";
 import { VideoCombobox } from "@/components/ui/video-combobox";
 import { CourseCombobox } from "@/components/ui/course-combobox";
+import { useDebounce } from "@/hooks/use-debounce"; // Import useDebounce
 
 export default function AdminPage() {
   const { user } = useUserStore();
@@ -66,7 +74,7 @@ export default function AdminPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [videos, setVideos] = useState<Video[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  
+
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -77,7 +85,7 @@ export default function AdminPage() {
   const [isUserCoursesFormOpen, setIsUserCoursesFormOpen] = useState(false);
 
   const [currentVideoFile, setCurrentVideoFile] = useState<File | null>(null);
-  
+
   // Form states for Video
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
@@ -88,12 +96,14 @@ export default function AdminPage() {
   const [coursePrice, setCoursePrice] = useState<number>(0);
   const [courseCategory, setCourseCategory] = useState<string[]>([]);
   const [courseVideos, setCourseVideos] = useState<string[]>([]);
-  const [usersSearchTerm, setUsersSearchTerm] = useState("");
 
   // User management states
+  const [usersSearchTerm, setUsersSearchTerm] = useState("");
+  const debouncedUsersSearchTerm = useDebounce(usersSearchTerm, 500);
   const [userCourses, setUserCourses] = useState<string[]>([]);
   const [usersPage, setUsersPage] = useState(1);
   const [usersTotalPages, setUsersTotalPages] = useState(1);
+  const [usersLoading, setUsersLoading] = useState(true);
 
   useEffect(() => {
     if (user === undefined) {
@@ -111,8 +121,16 @@ export default function AdminPage() {
       return;
     }
 
-    Promise.all([fetchCourses(), fetchVideos(), fetchUsers()]).finally(() => setLoading(false));
+    Promise.all([fetchCourses(), fetchVideos()]).finally(() =>
+      setLoading(false)
+    );
   }, [user, router]);
+
+  useEffect(() => {
+    if (user && user.role === Role.ADMIN) {
+      fetchUsers();
+    }
+  }, [user, usersPage, debouncedUsersSearchTerm]);
 
   const fetchCourses = async () => {
     try {
@@ -133,46 +151,20 @@ export default function AdminPage() {
   };
 
   const fetchUsers = async () => {
+    setUsersLoading(true);
     try {
-      // Mock data for now - replace with actual API call
-      const mockUsers: User[] = [
-        {
-          _id: "1",
-          first_name: "Malika",
-          last_name: "Karimova",
-          email: "malika@example.com",
-          phone: "+998 90 123 45 67",
-          balance: 0,
-          role: Role.USER,
-          createdAt: "2024-01-15",
-          updatedAt: "2024-01-15",
-        },
-        {
-          _id: "2",
-          first_name: "Nodira",
-          last_name: "Tosheva",
-          email: "nodira@example.com",
-          phone: "+998 91 234 56 78",
-          balance: 0,
-          role: Role.USER,
-          createdAt: "2024-01-10",
-          updatedAt: "2024-01-10",
-        },
-        {
-          _id: "3",
-          first_name: "Sevara",
-          last_name: "Alimova",
-          email: "sevara@example.com",
-          phone: "+998 93 345 67 89",
-          balance: 0,
-          role: Role.USER,
-          createdAt: "2024-01-05",
-          updatedAt: "2024-01-05",
-        },
-      ];
-      setUsers(mockUsers);
+      const { data, total } = await UserService.findAll(
+        usersPage,
+        10,
+        debouncedUsersSearchTerm
+      );
+      setUsers(data);
+      setUsersTotalPages(Math.ceil(total / 10));
     } catch (error) {
       console.error("Foydalanuvchilarni yuklashda xato:", error);
+      setUsers([]);
+    } finally {
+      setUsersLoading(false);
     }
   };
 
@@ -548,7 +540,7 @@ export default function AdminPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                {loading ? (
+                {usersLoading ? (
                   <p>Foydalanuvchilar yuklanmoqda...</p>
                 ) : users.length === 0 ? (
                   <p>Hozircha foydalanuvchilar mavjud emas.</p>

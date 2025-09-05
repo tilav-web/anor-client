@@ -21,6 +21,10 @@ class UserService {
   getMe() {
     return api.get("/users/me");
   }
+
+  findAll(page: number, limit: number, search: string) {
+    return api.get('/users', { params: { page, limit, search } });
+  }
 }
 
 export default new UserService();
