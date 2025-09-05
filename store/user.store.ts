@@ -18,8 +18,8 @@ export const useUserStore = create<UserStore>((set) => ({
   initializeUser: async () => {
     set({ loading: true });
     try {
-      const user = await UserService.getMe();
-      set({ user, loading: false });
+      const data = await UserService.getMe();
+      set({ user: data.user, loading: false });
     } catch (error) {
       console.error("Failed to initialize user:", error);
       set({ user: null, loading: false });
