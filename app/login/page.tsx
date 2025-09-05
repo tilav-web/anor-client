@@ -39,7 +39,7 @@ export default function LoginPage() {
     try {
       const response = await userService.login(data);
       console.log("Login successful", response);
-      const { user } = response.data;
+      const { user } = response;
       setUser(user);
 
       if (user.role === Role.ADMIN) {
