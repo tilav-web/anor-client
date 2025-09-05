@@ -32,6 +32,7 @@ import {
   Video as VideoIcon,
   UserX,
   UserCheck,
+  Loader2,
 } from "lucide-react";
 import {
   Table,
@@ -234,11 +235,14 @@ export default function AdminPage() {
     setCourseVideos([]);
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleVideoUpload = async () => {
     if (!currentVideoFile || !videoTitle) {
       alert("Iltimos, video fayli va sarlavhasini kiriting.");
       return;
     }
+    setIsUploading(true);
     try {
       const createVideoDto: CreateVideoDto = {
         title: videoTitle,
@@ -254,6 +258,8 @@ export default function AdminPage() {
     } catch (error) {
       console.error("Videoni yuklashda xato:", error);
       alert("Videoni yuklashda xato yuz berdi.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -891,9 +897,14 @@ export default function AdminPage() {
                       <div className="flex justify-end">
                         <Button
                           onClick={handleVideoUpload}
+                          disabled={isUploading}
                           className="bg-blue-600 hover:bg-blue-700"
                         >
-                          Yuklash
+                          {isUploading ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yuklanmoqda...</>
+                          ) : (
+                            "Yuklash"
+                          )}
                         </Button>
                       </div>
                     </DialogContent>
