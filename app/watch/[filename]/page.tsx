@@ -53,7 +53,7 @@ export default function WatchPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const videoStreamUrl = video ? `${API_URL}/video-stream/stream/${video.url.split('/').pop()}` : '';
+  const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (userLoading) {
@@ -65,20 +65,44 @@ export default function WatchPage() {
       return;
     }
 
-    const fetchVideo = async () => {
+    const fetchVideoAndStream = async () => {
       try {
-        // Assuming filename from URL is the video ID
+        // Fetch video metadata
         const fetchedVideo = await VideoService.findByFilename(filename as string);
         setVideo(fetchedVideo);
+
+        // Fetch video stream with authorization
+        const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+        if (!token) {
+          setError('Autentifikatsiya tokeni topilmadi. Iltimos, qayta kiring.');
+          setLoading(false);
+          return;
+        }
+
+        const streamUrl = `${API_URL}/video-stream/stream/${fetchedVideo.url.split('/').pop()}`;
+        const response = await fetch(streamUrl, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const videoBlob = await response.blob();
+        const url = URL.createObjectURL(videoBlob);
+        setVideoBlobUrl(url);
+
       } catch (err) {
-        console.error('Failed to fetch video:', err);
+        console.error('Failed to fetch video or stream:', err);
         setError('Videoni yuklashda xato yuz berdi. Iltimos, qayta urinib ko\'ring.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVideo();
+    fetchVideoAndStream();
 
     // DRM deterrents (not foolproof)
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
@@ -102,8 +126,11 @@ export default function WatchPage() {
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
+      if (videoBlobUrl) {
+        URL.revokeObjectURL(videoBlobUrl);
+      }
     };
-  }, [filename, user, userLoading, router]);
+  }, [filename, user, userLoading, router, videoBlobUrl]);
 
   if (loading) {
     return (
@@ -133,8 +160,8 @@ export default function WatchPage() {
     <div style={pageStyles}>
       <div style={overlayStyles} />
       <div style={videoContainerStyles}>
-        {videoStreamUrl && (
-            <video src={videoStreamUrl} style={videoStyles} controls controlsList="nodownload" />
+        {videoBlobUrl && (
+            <video src={videoBlobUrl} style={videoStyles} controls controlsList="nodownload" />
         )}
       </div>
       <div style={{ position: 'absolute', bottom: 20, left: 20, right: 20, textAlign: 'center', fontSize: '0.8em', color: 'rgba(255,255,255,0.7)', zIndex: 20 }}>
