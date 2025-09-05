@@ -2,28 +2,33 @@ import api from "../lib/api";
 import { User } from "../types/user";
 
 class UserService {
-  sendConfirmationCode(recipient: string, type: "email" | "phone") {
-    return api.post("/users/register", { recipient, type });
+  async sendConfirmationCode(recipient: string, type: "email" | "phone") {
+    const response = await api.post("/users/register", { recipient, type });
+    return response.data;
   }
 
-  confirmRegistration(
+  async confirmRegistration(
     recipient: string,
     code: string,
     user: Omit<User, "balance" | "role">
   ) {
-    return api.post("/users/confirm", { recipient, code, user });
+    const response = await api.post("/users/confirm", { recipient, code, user });
+    return response.data;
   }
 
-  login(data: any) {
-    return api.post("/users/login", data);
+  async login(data: any) {
+    const response = await api.post("/users/login", data);
+    return response.data;
   }
 
-  getMe() {
-    return api.get("/users/me");
+  async getMe() {
+    const response = await api.get("/users/me");
+    return response.data;
   }
 
-  findAll(page: number, limit: number, search: string) {
-    return api.get('/users', { params: { page, limit, search } });
+  async findAll(page: number, limit: number, search: string) {
+    const response = await api.get('/users', { params: { page, limit, search } });
+    return response.data;
   }
 }
 

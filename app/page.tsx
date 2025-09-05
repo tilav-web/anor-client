@@ -95,7 +95,7 @@ const ReviewsCarousel = () => {
           animate={{ x: -currentIndex * 100 + "%" }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          {reviews.map((review, index) => (
+          {reviews?.map((review, index) => (
             <div key={index} className="w-full flex-shrink-0 px-4">
               <div className="bg-white p-8 rounded-lg shadow-md border border-red-100 text-center">
                 <div className="flex items-center justify-center mb-6">
@@ -118,7 +118,7 @@ const ReviewsCarousel = () => {
       
       {/* Dots indicator */}
       <div className="flex justify-center mt-8 space-x-2">
-        {reviews.map((_, index) => (
+        {reviews?.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
@@ -138,7 +138,7 @@ const FAQAccordion = () => {
 
   const toggleItem = (index: number) => {
     setOpenItems(prev => 
-      prev.includes(index) 
+      prev?.includes(index) 
         ? prev.filter(item => item !== index)
         : [...prev, index]
     );
@@ -173,7 +173,7 @@ const FAQAccordion = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
-      {faqData.map((item, index) => (
+      {faqData?.map((item, index) => (
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 30 }}
@@ -190,7 +190,7 @@ const FAQAccordion = () => {
               {item.question}
             </h3>
             <div className="flex-shrink-0">
-              {openItems.includes(index) ? (
+              {openItems?.includes(index) ? (
                 <Minus className="h-6 w-6 text-red-600" />
               ) : (
                 <Plus className="h-6 w-6 text-red-600" />
@@ -198,7 +198,7 @@ const FAQAccordion = () => {
             </div>
           </button>
           
-          {openItems.includes(index) && (
+          {openItems?.includes(index) && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
@@ -408,7 +408,7 @@ export default function HomePage() {
 
         {/* Animated particles */}
         <div className="absolute inset-0 z-0 overflow-hidden">
-          {Array.from({ length: 30 }).map((_, i) => (
+          {Array.from({ length: 30 })?.map((_, i) => (
             <motion.div
               key={i}
               className="absolute w-2 h-2 rounded-full bg-red-200"
