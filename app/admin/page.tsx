@@ -66,6 +66,74 @@ import { Video } from "@/types/video";
 import { VideoCombobox } from "@/components/ui/video-combobox";
 import { CourseCombobox } from "@/components/ui/course-combobox";
 import { useDebounce } from "@/hooks/use-debounce"; // Import useDebounce
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user.store";
+import { Role, User } from "@/types/user";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import {
+  Heart,
+  Users,
+  CreditCard,
+  BookOpen,
+  Settings,
+  Search,
+  CheckCircle,
+  X,
+  Eye,
+  Edit,
+  Trash2,
+  PlusCircle,
+  Upload,
+  Video as VideoIcon,
+  UserX,
+  UserCheck,
+  Loader2,
+} from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import CourseService, {
+  CreateCourseDto,
+  UpdateCourseDto,
+} from "@/services/course.service";
+import VideoService, {
+  CreateVideoDto,
+  UpdateVideoDto,
+} from "@/services/video.service";
+import UserService from "@/services/user.service";
+import { Course } from "@/types/course";
+import { Video } from "@/types/video";
+import { VideoCombobox } from "@/components/ui/video-combobox";
+import { CourseCombobox } from "@/components/ui/course-combobox";
+import { useDebounce } from "@/hooks/use-debounce";
 import Link from 'next/link';
 
 export default function AdminPage() {
@@ -85,6 +153,10 @@ export default function AdminPage() {
   const [isVideoUploadFormOpen, setIsVideoUploadFormOpen] = useState(false);
   const [isVideoEditFormOpen, setIsVideoEditFormOpen] = useState(false);
   const [isUserCoursesFormOpen, setIsUserCoursesFormOpen] = useState(false);
+  const [isViewCourseDialogOpen, setIsViewCourseDialogOpen] = useState(false);
+
+  const [viewingCourse, setViewingCourse] = useState<Course | null>(null);
+  const [videosToAdd, setVideosToAdd] = useState<string[]>([]);
 
   const [currentVideoFile, setCurrentVideoFile] = useState<File | null>(null);
 
@@ -177,6 +249,7 @@ export default function AdminPage() {
         description: courseDescription,
         price: coursePrice,
         category: courseCategory,
+        videos: courseVideos,
       };
       await CourseService.create(newCourse);
       fetchCourses();
@@ -195,6 +268,7 @@ export default function AdminPage() {
         description: courseDescription,
         price: coursePrice,
         category: courseCategory,
+        videos: courseVideos,
       };
       await CourseService.update(selectedCourse._id, updatedCourse);
       fetchCourses();
@@ -249,7 +323,7 @@ export default function AdminPage() {
         description: videoDescription,
       };
       await VideoService.create(currentVideoFile, createVideoDto);
-      fetchVideos(); // Refresh video list
+      fetchVideos();
       alert("Video muvaffaqiyatli yuklandi!");
       setIsVideoUploadFormOpen(false);
       setCurrentVideoFile(null);
@@ -301,7 +375,6 @@ export default function AdminPage() {
 
   const handleEditUserCoursesClick = (user: User) => {
     setSelectedUser(user);
-    // Mock user courses - replace with actual API call
     setUserCourses([]);
     setIsUserCoursesFormOpen(true);
   };
@@ -309,7 +382,6 @@ export default function AdminPage() {
   const handleUpdateUserCourses = async () => {
     if (!selectedUser) return;
     try {
-      // Mock API call - replace with actual implementation
       console.log("Updating user courses:", selectedUser._id, userCourses);
       setIsUserCoursesFormOpen(false);
       setSelectedUser(null);
@@ -321,7 +393,6 @@ export default function AdminPage() {
 
   const handleUpdateUserStatus = async (userId: string, status: boolean) => {
     try {
-      // Mock API call - replace with actual implementation
       console.log("Updating user status:", userId, status);
       fetchUsers();
     } catch (error) {
@@ -329,28 +400,45 @@ export default function AdminPage() {
     }
   };
 
+  const handleViewCourseClick = (course: Course) => {
+    setViewingCourse(course);
+    setIsViewCourseDialogOpen(true);
+  };
+
+  const handleRemoveVideoFromCourse = async (videoId: string) => {
+    if (!viewingCourse) return;
+    if (window.confirm("Haqiqatan ham bu videoni kursdan olib tashlamoqchimisiz?")) {
+      try {
+        await CourseService.removeVideo(viewingCourse._id, videoId);
+        const updatedCourse = await CourseService.findOne(viewingCourse._id);
+        setViewingCourse(updatedCourse);
+        fetchCourses(); // Update the main courses list as well
+      } catch (error) {
+        console.error("Videoni kursdan olib tashlashda xato:", error);
+      }
+    }
+  };
+
+  const handleAddVideosToCourse = async () => {
+    if (!viewingCourse || videosToAdd.length === 0) return;
+    try {
+      await Promise.all(
+        videosToAdd.map(videoId => CourseService.addVideo(viewingCourse._id, videoId))
+      );
+      const updatedCourse = await CourseService.findOne(viewingCourse._id);
+      setViewingCourse(updatedCourse);
+      setVideosToAdd([]);
+      fetchCourses(); // Update the main courses list
+    } catch (error) {
+      console.error("Kursga video qo'shishda xato:", error);
+    }
+  };
+
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Mock data (keep for other tabs for now)
   const pendingPayments = [
-    {
-      id: 1,
-      user: "Malika Karimova",
-      email: "malika@example.com",
-      plan: "Optimal",
-      amount: "499,000 so'm",
-      date: "2024-01-20",
-      status: "pending",
-    },
-    {
-      id: 2,
-      user: "Nodira Tosheva",
-      email: "nodira@example.com",
-      plan: "VIP",
-      amount: "799,000 so'm",
-      date: "2024-01-19",
-      status: "pending",
-    },
+    { id: 1, user: "Malika Karimova", email: "malika@example.com", plan: "Optimal", amount: "499,000 so'm", date: "2024-01-20", status: "pending" },
+    { id: 2, user: "Nodira Tosheva", email: "nodira@example.com", plan: "VIP", amount: "799,000 so'm", date: "2024-01-19", status: "pending" },
   ];
 
   const stats = {
@@ -370,23 +458,15 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              Uyg'unlik Admin
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900">Uyg'unlik Admin</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-              Administrator
-            </Badge>
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Sozlamalar
-            </Button>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">Administrator</Badge>
+            <Button variant="outline" size="sm"><Settings className="h-4 w-4 mr-2" />Sozlamalar</Button>
           </div>
         </div>
       </header>
@@ -394,74 +474,17 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-          <p className="text-gray-600">
-            Foydalanuvchilar, to'lovlar va kurslarni boshqaring
-          </p>
+          <p className="text-gray-600">Foydalanuvchilar, to'lovlar va kurslarni boshqaring</p>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Jami foydalanuvchilar</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.totalUsers}
-                  </p>
-                </div>
-                <Users className="h-8 w-8 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Faol foydalanuvchilar</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.activeUsers}
-                  </p>
-                </div>
-                <CheckCircle className="h-8 w-8 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">
-                    Kutilayotgan to'lovlar
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {stats.pendingPayments}
-                  </p>
-                </div>
-                <CreditCard className="h-8 w-8 text-yellow-600" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Jami daromad</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {stats.totalRevenue}
-                  </p>
-                </div>
-                <BookOpen className="h-8 w-8 text-red-600" />
-              </div>
-            </CardContent>
-          </Card>
+          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Jami foydalanuvchilar</p><p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p></div><Users className="h-8 w-8 text-blue-600" /></div></CardContent></Card>
+          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Faol foydalanuvchilar</p><p className="text-2xl font-bold text-gray-900">{stats.activeUsers}</p></div><CheckCircle className="h-8 w-8 text-green-600" /></div></CardContent></Card>
+          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Kutilayotgan to'lovlar</p><p className="text-2xl font-bold text-gray-900">{stats.pendingPayments}</p></div><CreditCard className="h-8 w-8 text-yellow-600" /></div></CardContent></Card>
+          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Jami daromad</p><p className="text-lg font-bold text-gray-900">{stats.totalRevenue}</p></div><BookOpen className="h-8 w-8 text-red-600" /></div></CardContent></Card>
         </div>
 
-        {/* Main Content */}
-        <Tabs defaultValue="payments">
+        <Tabs defaultValue="courses">
           <TabsList className="mb-6">
             <TabsTrigger value="payments">To'lovlar</TabsTrigger>
             <TabsTrigger value="users">Foydalanuvchilar</TabsTrigger>
@@ -472,53 +495,21 @@ export default function AdminPage() {
 
           <TabsContent value="payments">
             <Card>
-              <CardHeader>
-                <CardTitle>Kutilayotgan to'lovlar</CardTitle>
-                <CardDescription>
-                  Tasdiqlash kutayotgan to'lovlarni ko'ring va boshqaring
-                </CardDescription>
-              </CardHeader>
+              <CardHeader><CardTitle>Kutilayotgan to'lovlar</CardTitle><CardDescription>Tasdiqlash kutayotgan to'lovlarni ko'ring va boshqaring</CardDescription></CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {pendingPayments.map((payment) => (
-                    <div
-                      key={payment.id}
-                      className="flex items-center justify-between p-4 border rounded-lg"
-                    >
+                    <div key={payment.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex-1">
                         <div className="flex items-center space-x-4">
-                          <div>
-                            <h4 className="font-medium text-gray-900">
-                              {payment.user}
-                            </h4>
-                            <p className="text-sm text-gray-600">
-                              {payment.email}
-                            </p>
-                          </div>
+                          <div><h4 className="font-medium text-gray-900">{payment.user}</h4><p className="text-sm text-gray-600">{payment.email}</p></div>
                           <Badge variant="outline">{payment.plan}</Badge>
                         </div>
-                        <div className="mt-2 text-sm text-gray-600">
-                          {payment.amount} • {payment.date}
-                        </div>
+                        <div className="mt-2 text-sm text-gray-600">{payment.amount} • {payment.date}</div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700"
-                          onClick={() => handleApprovePayment(payment.id)}
-                        >
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Tasdiqlash
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                          onClick={() => handleRejectPayment(payment.id)}
-                        >
-                          <X className="h-4 w-4 mr-1" />
-                          Rad etish
-                        </Button>
+                        <Button size="sm" className="bg-green-600 hover:bg-green-700" onClick={() => handleApprovePayment(payment.id)}><CheckCircle className="h-4 w-4 mr-1" />Tasdiqlash</Button>
+                        <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleRejectPayment(payment.id)}><X className="h-4 w-4 mr-1" />Rad etish</Button>
                       </div>
                     </div>
                   ))}
@@ -531,99 +522,39 @@ export default function AdminPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Foydalanuvchilar</CardTitle>
-                <CardDescription>
-                  Barcha foydalanuvchilarni ko'ring va boshqaring
-                </CardDescription>
+                <CardDescription>Barcha foydalanuvchilarni ko'ring va boshqaring</CardDescription>
                 <div className="flex items-center space-x-2">
                   <div className="relative flex-1 max-w-sm">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Foydalanuvchi qidirish..."
-                      className="pl-10"
-                      value={usersSearchTerm}
-                      onChange={(e) => setUsersSearchTerm(e.target.value)}
-                    />
+                    <Input placeholder="Foydalanuvchi qidirish..." className="pl-10" value={usersSearchTerm} onChange={(e) => setUsersSearchTerm(e.target.value)} />
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
-                {usersLoading ? (
-                  <p>Foydalanuvchilar yuklanmoqda...</p>
-                ) : users.length === 0 ? (
-                  <p>Hozircha foydalanuvchilar mavjud emas.</p>
-                ) : (
+                {usersLoading ? <p>Foydalanuvchilar yuklanmoqda...</p> : users.length === 0 ? <p>Hozircha foydalanuvchilar mavjud emas.</p> : (
                   <>
                     <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Ism Familiya</TableHead>
-                          <TableHead>Email</TableHead>
-                          <TableHead>Telefon</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Kurslar</TableHead>
-                          <TableHead className="text-right">Harakatlar</TableHead>
-                        </TableRow>
-                      </TableHeader>
+                      <TableHeader><TableRow><TableHead>Ism Familiya</TableHead><TableHead>Email</TableHead><TableHead>Telefon</TableHead><TableHead>Status</TableHead><TableHead>Kurslar</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
                       <TableBody>
                         {users.map((user) => (
                           <TableRow key={user._id}>
-                            <TableCell className="font-medium">
-                              {user.first_name} {user.last_name}
-                            </TableCell>
+                            <TableCell className="font-medium">{user.first_name} {user.last_name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.phone}</TableCell>
-                            <TableCell>
-                              <Badge
-                                variant="default"
-                                className="bg-green-100 text-green-800"
-                              >
-                                Faol
-                              </Badge>
-                            </TableCell>
+                            <TableCell><Badge variant="default" className="bg-green-100 text-green-800">Faol</Badge></TableCell>
                             <TableCell>0</TableCell>
                             <TableCell className="text-right">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                className="mr-2"
-                                onClick={() => handleEditUserCoursesClick(user)}
-                              >
-                                <BookOpen className="h-4 w-4 mr-1" />
-                                Kurslar
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleUpdateUserStatus(user._id, false)}
-                              >
-                                <UserX className="h-4 w-4 mr-1" />
-                                Bloklash
-                              </Button>
+                              <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditUserCoursesClick(user)}><BookOpen className="h-4 w-4 mr-1" />Kurslar</Button>
+                              <Button variant="outline" size="sm" onClick={() => handleUpdateUserStatus(user._id, false)}><UserX className="h-4 w-4 mr-1" />Bloklash</Button>
                             </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
                     <div className="flex items-center justify-end space-x-2 py-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setUsersPage(usersPage - 1)}
-                        disabled={usersPage === 1}
-                      >
-                        Oldingi
-                      </Button>
-                      <span className="text-sm">
-                        Sahifa {usersPage} / {usersTotalPages}
-                      </span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setUsersPage(usersPage + 1)}
-                        disabled={usersPage === usersTotalPages}
-                      >
-                        Keyingi
-                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setUsersPage(usersPage - 1)} disabled={usersPage === 1}>Oldingi</Button>
+                      <span className="text-sm">Sahifa {usersPage} / {usersTotalPages}</span>
+                      <Button variant="outline" size="sm" onClick={() => setUsersPage(usersPage + 1)} disabled={usersPage === usersTotalPages}>Keyingi</Button>
                     </div>
                   </>
                 )}
@@ -631,27 +562,9 @@ export default function AdminPage() {
             </Card>
             <Dialog open={isUserCoursesFormOpen} onOpenChange={setIsUserCoursesFormOpen}>
               <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Foydalanuvchi kurslarini boshqarish</DialogTitle>
-                  <DialogDescription>
-                    {selectedUser?.first_name} {selectedUser?.last_name} uchun kurslarga ruxsatni boshqaring.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="py-4">
-                  <CourseCombobox
-                    courses={courses}
-                    selectedCourses={userCourses}
-                    onChange={setUserCourses}
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleUpdateUserCourses}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    Saqlash
-                  </Button>
-                </div>
+                <DialogHeader><DialogTitle>Foydalanuvchi kurslarini boshqarish</DialogTitle><DialogDescription>{selectedUser?.first_name} {selectedUser?.last_name} uchun kurslarga ruxsatni boshqaring.</DialogDescription></DialogHeader>
+                <div className="py-4"><CourseCombobox courses={courses} selectedCourses={userCourses} onChange={setUserCourses} /></div>
+                <div className="flex justify-end"><Button onClick={handleUpdateUserCourses} className="bg-blue-600 hover:bg-blue-700">Saqlash</Button></div>
               </DialogContent>
             </Dialog>
           </TabsContent>
@@ -661,163 +574,41 @@ export default function AdminPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Kurslar boshqaruvi</CardTitle>
-                  <Dialog
-                    open={isCourseFormOpen}
-                    onOpenChange={setIsCourseFormOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button
-                        onClick={resetCourseForm}
-                        className="bg-red-600 hover:bg-red-700"
-                      >
-                        <PlusCircle className="h-4 w-4 mr-2" />
-                        Yangi kurs
-                      </Button>
-                    </DialogTrigger>
+                  <Dialog open={isCourseFormOpen} onOpenChange={setIsCourseFormOpen}>
+                    <DialogTrigger asChild><Button onClick={resetCourseForm} className="bg-red-600 hover:bg-red-700"><PlusCircle className="h-4 w-4 mr-2" />Yangi kurs</Button></DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
                       <DialogHeader>
-                        <DialogTitle>
-                          {selectedCourse
-                            ? "Kursni tahrirlash"
-                            : "Yangi kurs yaratish"}
-                        </DialogTitle>
-                        <DialogDescription>
-                          {selectedCourse
-                            ? "Kurs ma'lumotlarini tahrirlang."
-                            : "Yangi kurs yaratish uchun ma'lumotlarni kiriting."}
-                        </DialogDescription>
+                        <DialogTitle>{selectedCourse ? "Kursni tahrirlash" : "Yangi kurs yaratish"}</DialogTitle>
+                        <DialogDescription>{selectedCourse ? "Kurs ma'lumotlarini tahrirlang." : "Yangi kurs yaratish uchun ma'lumotlarni kiriting."}</DialogDescription>
                       </DialogHeader>
                       <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="title" className="text-right">
-                            Sarlavha
-                          </Label>
-                          <Input
-                            id="title"
-                            value={courseTitle}
-                            onChange={(e) => setCourseTitle(e.target.value)}
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="description" className="text-right">
-                            Tavsif
-                          </Label>
-                          <Textarea
-                            id="description"
-                            value={courseDescription}
-                            onChange={(e) =>
-                              setCourseDescription(e.target.value)
-                            }
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="price" className="text-right">
-                            Narxi
-                          </Label>
-                          <Input
-                            id="price"
-                            type="number"
-                            value={coursePrice}
-                            onChange={(e) =>
-                              setCoursePrice(parseFloat(e.target.value))
-                            }
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="category" className="text-right">
-                            Kategoriya
-                          </Label>
-                          <Input
-                            id="category"
-                            value={courseCategory.join(", ")}
-                            onChange={(e) =>
-                              setCourseCategory(
-                                e.target.value.split(",").map((s) => s.trim())
-                              )
-                            }
-                            className="col-span-3"
-                            placeholder="Masalan: Ayollar salomatligi, Gormonlar"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="videos" className="text-right">
-                            Videolar
-                          </Label>
-                          <div className="col-span-3">
-                            <VideoCombobox
-                              videos={videos}
-                              selectedVideos={courseVideos}
-                              onChange={setCourseVideos}
-                            />
-                          </div>
-                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="title" className="text-right">Sarlavha</Label><Input id="title" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="col-span-3" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="description" className="text-right">Tavsif</Label><Textarea id="description" value={courseDescription} onChange={(e) => setCourseDescription(e.target.value)} className="col-span-3" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="price" className="text-right">Narxi</Label><Input id="price" type="number" value={coursePrice} onChange={(e) => setCoursePrice(parseFloat(e.target.value))} className="col-span-3" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="category" className="text-right">Kategoriya</Label><Input id="category" value={courseCategory.join(", ")} onChange={(e) => setCourseCategory(e.target.value.split(",").map((s) => s.trim()))} className="col-span-3" placeholder="Masalan: Ayollar salomatligi, Gormonlar" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="videos" className="text-right">Videolar</Label><div className="col-span-3"><VideoCombobox videos={videos} selectedVideos={courseVideos} onChange={setCourseVideos} /></div></div>
                       </div>
-                      <div className="flex justify-end">
-                        <Button
-                          onClick={
-                            selectedCourse
-                              ? handleUpdateCourse
-                              : handleCreateCourse
-                          }
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          {selectedCourse ? "Yangilash" : "Yaratish"}
-                        </Button>
-                      </div>
+                      <div className="flex justify-end"><Button onClick={selectedCourse ? handleUpdateCourse : handleCreateCourse} className="bg-red-600 hover:bg-red-700">{selectedCourse ? "Yangilash" : "Yaratish"}</Button></div>
                     </DialogContent>
                   </Dialog>
                 </div>
-                <CardDescription>
-                  Kurs materiallarini va darslarni boshqaring
-                </CardDescription>
+                <CardDescription>Kurs materiallarini va darslarni boshqaring</CardDescription>
               </CardHeader>
               <CardContent>
-                {loading ? (
-                  <p>Kurslar yuklanmoqda...</p>
-                ) : courses.length === 0 ? (
-                  <p>Hozircha kurslar mavjud emas.</p>
-                ) : (
+                {loading ? <p>Kurslar yuklanmoqda...</p> : courses.length === 0 ? <p>Hozircha kurslar mavjud emas.</p> : (
                   <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Sarlavha</TableHead>
-                        <TableHead>Narxi</TableHead>
-                        <TableHead>Kategoriya</TableHead>
-                        <TableHead>Darslar soni</TableHead>
-                        <TableHead className="text-right">Harakatlar</TableHead>
-                      </TableRow>
-                    </TableHeader>
+                    <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead>Narxi</TableHead><TableHead>Kategoriya</TableHead><TableHead>Darslar soni</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
                     <TableBody>
                       {courses.map((course) => (
                         <TableRow key={course._id}>
-                          <TableCell className="font-medium">
-                            {course.title}
-                          </TableCell>
-                          <TableCell>
-                            {course.price.toLocaleString()} so'm
-                          </TableCell>
+                          <TableCell className="font-medium">{course.title}</TableCell>
+                          <TableCell>{course.price.toLocaleString()} so'm</TableCell>
                           <TableCell>{course.category.join(", ")}</TableCell>
                           <TableCell>{course.videos.length}</TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="mr-2"
-                              onClick={() => handleEditCourseClick(course)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                              onClick={() => handleDeleteCourse(course._id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleViewCourseClick(course)}><Eye className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditCourseClick(course)}><Edit className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleDeleteCourse(course._id)}><Trash2 className="h-4 w-4" /></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -831,134 +622,35 @@ export default function AdminPage() {
           <TabsContent value="videos">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Videolar boshqaruvi</CardTitle>
-                  <Dialog
-                    open={isVideoUploadFormOpen}
-                    onOpenChange={setIsVideoUploadFormOpen}
-                  >
-                    <DialogTrigger asChild>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
-                        <Upload className="h-4 w-4 mr-2" />
-                        Video yuklash
-                      </Button>
-                    </DialogTrigger>
+                <div className="flex items-center justify-between"><CardTitle>Videolar boshqaruvi</CardTitle>
+                  <Dialog open={isVideoUploadFormOpen} onOpenChange={setIsVideoUploadFormOpen}>
+                    <DialogTrigger asChild><Button className="bg-blue-600 hover:bg-blue-700"><Upload className="h-4 w-4 mr-2" />Video yuklash</Button></DialogTrigger>
                     <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Video yuklash</DialogTitle>
-                        <DialogDescription>
-                          Yangi videoni yuklash uchun ma'lumotlarni kiriting.
-                        </DialogDescription>
-                      </DialogHeader>
+                      <DialogHeader><DialogTitle>Video yuklash</DialogTitle><DialogDescription>Yangi videoni yuklash uchun ma'lumotlarni kiriting.</DialogDescription></DialogHeader>
                       <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="videoTitle" className="text-right">
-                            Sarlavha
-                          </Label>
-                          <Input
-                            id="videoTitle"
-                            value={videoTitle}
-                            onChange={(e) => setVideoTitle(e.target.value)}
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label
-                            htmlFor="videoDescription"
-                            className="text-right"
-                          >
-                            Tavsif
-                          </Label>
-                          <Textarea
-                            id="videoDescription"
-                            value={videoDescription}
-                            onChange={(e) =>
-                              setVideoDescription(e.target.value)
-                            }
-                            className="col-span-3"
-                          />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="videoFile" className="text-right">
-                            Video fayl
-                          </Label>
-                          <Input
-                            id="videoFile"
-                            type="file"
-                            onChange={(e) =>
-                              setCurrentVideoFile(
-                                e.target.files ? e.target.files[0] : null
-                              )
-                            }
-                            className="col-span-3"
-                          />
-                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="videoTitle" className="text-right">Sarlavha</Label><Input id="videoTitle" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="videoDescription" className="text-right">Tavsif</Label><Textarea id="videoDescription" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" /></div>
+                        <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="videoFile" className="text-right">Video fayl</Label><Input id="videoFile" type="file" onChange={(e) => setCurrentVideoFile(e.target.files ? e.target.files[0] : null)} className="col-span-3" /></div>
                       </div>
-                      <div className="flex justify-end">
-                        <Button
-                          onClick={handleVideoUpload}
-                          disabled={isUploading}
-                          className="bg-blue-600 hover:bg-blue-700"
-                        >
-                          {isUploading ? (
-                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yuklanmoqda...</>
-                          ) : (
-                            "Yuklash"
-                          )}
-                        </Button>
-                      </div>
+                      <div className="flex justify-end"><Button onClick={handleVideoUpload} disabled={isUploading} className="bg-blue-600 hover:bg-blue-700">{isUploading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Yuklanmoqda...</> : "Yuklash"}</Button></div>
                     </DialogContent>
                   </Dialog>
                 </div>
-                <CardDescription>
-                  Mavjud videolarni tahrirlash va yangilarini qo'shish
-                </CardDescription>
+                <CardDescription>Mavjud videolarni tahrirlash va yangilarini qo'shish</CardDescription>
               </CardHeader>
               <CardContent>
-                {loading ? (
-                  <p>Videolar yuklanmoqda...</p>
-                ) : videos.length === 0 ? (
-                  <p>Hozircha videolar mavjud emas.</p>
-                ) : (
+                {loading ? <p>Videolar yuklanmoqda...</p> : videos.length === 0 ? <p>Hozircha videolar mavjud emas.</p> : (
                   <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Sarlavha</TableHead>
-                        <TableHead>Tavsif</TableHead>
-                        <TableHead>Havola</TableHead>
-                        <TableHead className="text-right">Harakatlar</TableHead>
-                      </TableRow>
-                    </TableHeader>
+                    <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead>Tavsif</TableHead><TableHead>Havola</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
                     <TableBody>
                       {videos.map((video) => (
                         <TableRow key={video._id}>
                           <TableCell className="font-medium">{video.title}</TableCell>
                           <TableCell>{video.description}</TableCell>
-                          <TableCell>
-                            <Link href={`/watch/${video.url.split('/').pop()}`}>
-                              <Button variant="outline" size="sm">
-                                <Eye className="h-4 w-4 mr-1" />
-                                Ko'rish
-                              </Button>
-                            </Link>
-                          </TableCell>
+                          <TableCell><Link href={`/watch/${video.url.split('/').pop()}`}><Button variant="outline" size="sm"><Eye className="h-4 w-4 mr-1" />Ko'rish</Button></Link></TableCell>
                           <TableCell className="text-right">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="mr-2"
-                              onClick={() => handleEditVideoClick(video)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                              onClick={() => handleDeleteVideo(video._id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
+                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditVideoClick(video)}><Edit className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleDeleteVideo(video._id)}><Trash2 className="h-4 w-4" /></Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -969,114 +661,32 @@ export default function AdminPage() {
             </Card>
             <Dialog open={isVideoEditFormOpen} onOpenChange={setIsVideoEditFormOpen}>
               <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Videoni tahrirlash</DialogTitle>
-                  <DialogDescription>
-                    Video ma'lumotlarini tahrirlang.
-                  </DialogDescription>
-                </DialogHeader>
+                <DialogHeader><DialogTitle>Videoni tahrirlash</DialogTitle><DialogDescription>Video ma'lumotlarini tahrirlang.</DialogDescription></DialogHeader>
                 <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="editVideoTitle" className="text-right">
-                      Sarlavha
-                    </Label>
-                    <Input
-                      id="editVideoTitle"
-                      value={videoTitle}
-                      onChange={(e) => setVideoTitle(e.target.value)}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="editVideoDescription" className="text-right">
-                      Tavsif
-                    </Label>
-                    <Textarea
-                      id="editVideoDescription"
-                      value={videoDescription}
-                      onChange={(e) => setVideoDescription(e.target.value)}
-                      className="col-span-3"
-                    />
-                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="editVideoTitle" className="text-right">Sarlavha</Label><Input id="editVideoTitle" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" /></div>
+                  <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="editVideoDescription" className="text-right">Tavsif</Label><Textarea id="editVideoDescription" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" /></div>
                 </div>
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleUpdateVideo}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    Yangilash
-                  </Button>
-                </div>
+                <div className="flex justify-end"><Button onClick={handleUpdateVideo} className="bg-blue-600 hover:bg-blue-700">Yangilash</Button></div>
               </DialogContent>
             </Dialog>
           </TabsContent>
 
           <TabsContent value="settings">
             <Card>
-              <CardHeader>
-                <CardTitle>Tizim sozlamalari</CardTitle>
-                <CardDescription>
-                  Umumiy tizim sozlamalarini boshqaring
-                </CardDescription>
-              </CardHeader>
+              <CardHeader><CardTitle>Tizim sozlamalari</CardTitle><CardDescription>Umumiy tizim sozlamalarini boshqaring</CardDescription></CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-4">
-                    To'lov sozlamalari
-                  </h4>
+                  <h4 className="font-medium text-gray-900 mb-4">To'lov sozlamalari</h4>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h5 className="font-medium">Payme integratsiyasi</h5>
-                        <p className="text-sm text-gray-600">
-                          Payme orqali to'lovlarni qabul qilish
-                        </p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        Faol
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h5 className="font-medium">Click integratsiyasi</h5>
-                        <p className="text-sm text-gray-600">
-                          Click orqali to'lovlarni qabul qilish
-                        </p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        Faol
-                      </Badge>
-                    </div>
+                    <div className="flex items-center justify-between p-4 border rounded-lg"><div><h5 className="font-medium">Payme integratsiyasi</h5><p className="text-sm text-gray-600">Payme orqali to'lovlarni qabul qilish</p></div><Badge className="bg-green-100 text-green-800">Faol</Badge></div>
+                    <div className="flex items-center justify-between p-4 border rounded-lg"><div><h5 className="font-medium">Click integratsiyasi</h5><p className="text-sm text-gray-600">Click orqali to'lovlarni qabul qilish</p></div><Badge className="bg-green-100 text-green-800">Faol</Badge></div>
                   </div>
                 </div>
-
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-4">
-                    Xabarnoma sozlamalari
-                  </h4>
+                  <h4 className="font-medium text-gray-900 mb-4">Xabarnoma sozlamalari</h4>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h5 className="font-medium">SMS xabarnomalar</h5>
-                        <p className="text-sm text-gray-600">
-                          Foydalanuvchilarga SMS yuborish
-                        </p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        Faol
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <h5 className="font-medium">Email xabarnomalar</h5>
-                        <p className="text-sm text-gray-600">
-                          Foydalanuvchilarga email yuborish
-                        </p>
-                      </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        Faol
-                      </Badge>
-                    </div>
+                    <div className="flex items-center justify-between p-4 border rounded-lg"><div><h5 className="font-medium">SMS xabarnomalar</h5><p className="text-sm text-gray-600">Foydalanuvchilarga SMS yuborish</p></div><Badge className="bg-green-100 text-green-800">Faol</Badge></div>
+                    <div className="flex items-center justify-between p-4 border rounded-lg"><div><h5 className="font-medium">Email xabarnomalar</h5><p className="text-sm text-gray-600">Foydalanuvchilarga email yuborish</p></div><Badge className="bg-green-100 text-green-800">Faol</Badge></div>
                   </div>
                 </div>
               </CardContent>
@@ -1084,6 +694,75 @@ export default function AdminPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* View Course Dialog */}
+      <Dialog open={isViewCourseDialogOpen} onOpenChange={setIsViewCourseDialogOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{viewingCourse?.title}</DialogTitle>
+            <DialogDescription>
+              {viewingCourse?.description || "Kurs uchun tavsif kiritilmagan."}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <h3 className="text-lg font-medium mb-4">Kurs Videolari</h3>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Sarlavha</TableHead>
+                    <TableHead>Tavsif</TableHead>
+                    <TableHead className="text-right">Harakat</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {viewingCourse?.videos && viewingCourse.videos.length > 0 ? (
+                    viewingCourse.videos.map((video) => (
+                      <TableRow key={video._id}>
+                        <TableCell className="font-medium">{video.title}</TableCell>
+                        <TableCell>{video.description}</TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                            onClick={() => handleRemoveVideoFromCourse(video._id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} className="text-center">
+                        Bu kursga hali video qo'shilmagan.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-4">Yangi video qo'shish</h3>
+            <div className="flex items-center space-x-2">
+              <div className="flex-grow">
+                <VideoCombobox
+                  videos={videos.filter(video => !viewingCourse?.videos.some(v => v._id === video._id))}
+                  selectedVideos={videosToAdd}
+                  onChange={setVideosToAdd}
+                />
+              </div>
+              <Button onClick={handleAddVideosToCourse} disabled={videosToAdd.length === 0}>
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Qo'shish
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+

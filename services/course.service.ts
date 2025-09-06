@@ -7,6 +7,7 @@ export interface CreateCourseDto {
   description?: string;
   price: number;
   category: string[];
+  videos?: string[];
 }
 
 export interface UpdateCourseDto {
@@ -14,6 +15,7 @@ export interface UpdateCourseDto {
   description?: string;
   price?: number;
   category?: string[];
+  videos?: string[];
 }
 
 class CourseService {
