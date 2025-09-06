@@ -1,48 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useUserStore } from '@/store/user.store';
-import VideoService from '@/services/video.service';
-import { Video } from '@/types/video';
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user.store";
+import VideoService from "@/services/video.service";
+import { Video } from "@/types/video";
 
-// Basic styling for the page and to discourage screenshots
-const pageStyles: React.CSSProperties = {
-  position: 'relative',
-  width: '100vw',
-  height: '100vh',
-  backgroundColor: 'black',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  overflow: 'hidden',
-  color: 'white', // For text messages
-};
-
-const overlayStyles: React.CSSProperties = {
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  pointerEvents: 'none',
-  zIndex: 10,
-  background: 'url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"100px\" width=\"100px\"><text x=\"0\" y=\"50\" fill=\"rgba(255,255,255,0.05)\" font-size=\"10\">CONFIDENTIAL</text></svg>")',
-  backgroundRepeat: 'repeat',
-};
-
-const videoContainerStyles: React.CSSProperties = {
-    position: 'relative',
-    width: '90%',
-    maxWidth: '1280px',
-};
-
-const videoStyles: React.CSSProperties = {
-  width: '100%',
-  height: 'auto',
-};
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.uygunlik.uz';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.uygunlik.uz";
 
 export default function WatchPage() {
   const { filename } = useParams();
@@ -53,79 +17,52 @@ export default function WatchPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [videoBlobUrl, setVideoBlobUrl] = useState<string | null>(null);
-
   useEffect(() => {
-    if (userLoading) {
-      return; // Wait for user store to load
-    }
-
+    if (userLoading) return;
     if (!user) {
-      router.push('/login'); // Redirect to login if not authenticated
+      router.push("/login");
       return;
     }
 
-    const fetchVideoAndStream = async () => {
+    const fetchVideo = async () => {
       try {
-        // Fetch video metadata
         const fetchedVideo = await VideoService.findByFilename(filename as string);
         setVideo(fetchedVideo);
-
-        // Fetch video stream with authorization
-        const streamUrl = `${API_URL}/video-stream/stream/${fetchedVideo.url.split('/').pop()}`;
-        const response = await fetch(streamUrl, {
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const videoBlob = await response.blob();
-        const url = URL.createObjectURL(videoBlob);
-        setVideoBlobUrl(url);
-
       } catch (err) {
-        console.error('Failed to fetch video or stream:', err);
-        setError('Videoni yuklashda xato yuz berdi. Iltimos, qayta urinib ko\'ring.');
+        console.error("Video metadata error:", err);
+        setError("Videoni yuklashda xatolik yuz berdi. Qayta urinib ko‘ring.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchVideoAndStream();
+    fetchVideo();
 
-    // DRM deterrents (not foolproof)
+    // Bloklash choralar
     const handleContextMenu = (e: MouseEvent) => e.preventDefault();
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
-        e.key === 'PrintScreen' ||
-        (e.ctrlKey && e.key === 'p') ||
-        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
-        (e.ctrlKey && e.shiftKey && e.key === 'J') ||
-        (e.ctrlKey && e.shiftKey && e.key === 'C') ||
-        e.key === 'F12'
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && e.key.toLowerCase() === "p") ||
+        (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(e.key.toLowerCase())) ||
+        e.key === "F12"
       ) {
         e.preventDefault();
-        // alert('This action is disabled.'); // Optional: alert user
       }
     };
 
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-      if (videoBlobUrl) {
-        URL.revokeObjectURL(videoBlobUrl);
-      }
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [filename, user, userLoading, router, videoBlobUrl]);
+  }, [filename, user, userLoading, router]);
 
   if (loading) {
     return (
-      <div style={pageStyles}>
+      <div className="flex items-center justify-center min-h-screen bg-black text-white">
         <p>Video yuklanmoqda...</p>
       </div>
     );
@@ -133,7 +70,7 @@ export default function WatchPage() {
 
   if (error) {
     return (
-      <div style={pageStyles}>
+      <div className="flex items-center justify-center min-h-screen bg-black text-red-400">
         <p>{error}</p>
       </div>
     );
@@ -141,22 +78,43 @@ export default function WatchPage() {
 
   if (!video) {
     return (
-      <div style={pageStyles}>
+      <div className="flex items-center justify-center min-h-screen bg-black text-gray-400">
         <p>Video topilmadi.</p>
       </div>
     );
   }
 
   return (
-    <div style={pageStyles}>
-      <div style={overlayStyles} />
-      <div style={videoContainerStyles}>
-        {videoBlobUrl && (
-            <video src={videoBlobUrl} style={videoStyles} controls controlsList="nodownload" />
-        )}
+    <div className="relative w-screen h-screen bg-black flex items-center justify-center">
+      {/* Overlay suv belgisi */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background:
+            'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' height=\'100px\' width=\'100px\'><text x=\'0\' y=\'50\' fill=\'rgba(255,255,255,0.05)\' font-size=\'14\'>CONFIDENTIAL</text></svg>")',
+          backgroundRepeat: "repeat",
+        }}
+      />
+
+      {/* Video container */}
+      <div className="relative w-11/12 max-w-5xl">
+        <video
+          src={`${API_URL}/video-stream/stream/${video.url.split("/").pop()}`}
+          className="w-full rounded-xl shadow-xl"
+          controls
+          controlsList="nodownload"
+          disablePictureInPicture
+          playsInline
+        />
       </div>
-      <div style={{ position: 'absolute', bottom: 20, left: 20, right: 20, textAlign: 'center', fontSize: '0.8em', color: 'rgba(255,255,255,0.7)', zIndex: 20 }}>
-        <p>Eslatma: Ekranni yozib olish va skrinshot qilishga qarshi choralar ko'rilgan bo'lsa-da, bu to'liq himoya emas. Kontentni ruxsatsiz tarqatish qonun bilan taqiqlanadi.</p>
+
+      {/* Ogohlantirish matni */}
+      <div className="absolute bottom-4 left-4 right-4 text-center text-sm text-gray-400 z-20">
+        <p>
+          ⚠️ Kontent himoyalangan. Ekranni yozib olish va skrinshot qilishga
+          qarshi choralar qo‘llangan, ammo bu to‘liq himoya emas. Ruxsatsiz
+          tarqatish qonun bilan taqiqlanadi.
+        </p>
       </div>
     </div>
   );
