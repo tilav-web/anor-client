@@ -1,72 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/user.store";
-import { Role, User } from "@/types/user";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import {
-  Heart,
-  Users,
-  CreditCard,
-  BookOpen,
-  Settings,
-  Search,
-  CheckCircle,
-  X,
-  Eye,
-  Edit,
-  Trash2,
-  PlusCircle,
-  Upload,
-  Video as VideoIcon,
-  UserX,
-  UserCheck,
-  Loader2,
-} from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import CourseService, {
-  CreateCourseDto,
-  UpdateCourseDto,
-} from "@/services/course.service";
-import VideoService, {
-  CreateVideoDto,
-  UpdateVideoDto,
-} from "@/services/video.service";
-import UserService from "@/services/user.service"; // Import UserService
-import { Course } from "@/types/course";
-import { Video } from "@/types/video";
-import { VideoCombobox } from "@/components/ui/video-combobox";
-import { CourseCombobox } from "@/components/ui/course-combobox";
-import { useDebounce } from "@/hooks/use-debounce"; // Import useDebounce
-"use client";
+'use client';
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -323,7 +255,7 @@ export default function AdminPage() {
         description: videoDescription,
       };
       await VideoService.create(currentVideoFile, createVideoDto);
-      fetchVideos();
+      fetchVideos(); // Refresh video list
       alert("Video muvaffaqiyatli yuklandi!");
       setIsVideoUploadFormOpen(false);
       setCurrentVideoFile(null);
@@ -765,4 +697,3 @@ export default function AdminPage() {
     </div>
   );
 }
-
