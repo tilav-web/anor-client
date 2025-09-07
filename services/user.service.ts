@@ -30,6 +30,11 @@ class UserService {
     const response = await api.get('/users', { params: { page, limit, search } });
     return response.data;
   }
+
+  async updateProfile(data: Partial<User>) {
+    const response = await api.patch("/users/me", data);
+    return response.data;
+  }
 }
 
 export default new UserService();

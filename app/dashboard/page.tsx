@@ -12,6 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -27,8 +29,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import CourseService from "@/services/course.service";
+import UserService from "@/services/user.service";
 import { Course } from "@/types/course";
 import { Video } from "@/types/video";
+import { useToast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 // Extend Video type to include frontend-specific properties for dashboard display
 interface DashboardVideo extends Video {
@@ -37,8 +52,45 @@ interface DashboardVideo extends Video {
 }
 
 export default function DashboardPage() {
-  const { user } = useUserStore();
+  const { user, setUser } = useUserStore();
   const router = useRouter();
+  const { toast } = useToast();
+
+  const formSchema = z.object({
+    first_name: z.string().min(2, { message: "Ism kamida 2 harfdan iborat bo'lishi kerak." }),
+    last_name: z.string().min(2, { message: "Familiya kamida 2 harfdan iborat bo'lishi kerak." }),
+    email: z.string().email({ message: "Noto'g'ri email format." }),
+    phone: z.string().min(9, { message: "Noto'g'ri telefon raqam format." }),
+    password: z.string().optional(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const updatedUser = await UserService.updateProfile(values);
+      setUser(updatedUser);
+      toast({
+        title: "Muvaffaqiyatli!",
+        description: "Ma'lumotlaringiz muvaffaqiyatli o'zgartirildi.",
+      });
+    } catch (error) {
+      toast({
+        title: "Xatolik!",
+        description: "Ma'lumotlarni o'zgartirishda xatolik yuz berdi.",
+        variant: "destructive",
+      });
+    }
+  }
 
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -355,36 +407,81 @@ export default function DashboardPage() {
                   Hisobingiz va shaxsiy ma'lumotlaringizni boshqaring
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      To'liq ism
-                    </label>
-                    <p className="mt-1 text-gray-900">{userInfo.name}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <p className="mt-1 text-gray-900">{userInfo.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      Telefon
-                    </label>
-                    <p className="mt-1 text-gray-900">{userInfo.phone}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-gray-700">
-                      Ro'yxatdan o'tgan sana
-                    </label>
-                    <p className="mt-1 text-gray-900">{userInfo.joinDate}</p>
-                  </div>
-                </div>
-                <Button className="bg-red-600 hover:bg-red-700">
-                  Ma'lumotlarni o'zgartirish
-                </Button>
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
+                        name="first_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ism</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ismingiz" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="last_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Familiya</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Familiyangiz" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Emailingiz" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Telefon</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Telefon raqamingiz" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Yangi parol (ixtiyoriy)</FormLabel>
+                            <FormControl>
+                              <Input type="password" placeholder="Yangi parol" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <Button type="submit" className="bg-red-600 hover:bg-red-700">
+                      Saqlash
+                    </Button>
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           </TabsContent>
