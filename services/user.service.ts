@@ -35,6 +35,11 @@ class UserService {
     const response = await api.patch("/users/me", data);
     return response.data;
   }
+
+  async updateUserCourses(userId: string, courseIds: string[]): Promise<User> {
+    const response = await api.patch(`/users/${userId}/courses`, { courses: courseIds });
+    return response.data;
+  }
 }
 
 export default new UserService();

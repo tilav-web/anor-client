@@ -64,10 +64,12 @@ import { CourseCombobox } from "@/components/ui/course-combobox";
 import { useDebounce } from "@/hooks/use-debounce";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function AdminPage() {
   const { user } = useUserStore();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [courses, setCourses] = useState<Course[]>([]);
@@ -305,31 +307,30 @@ export default function AdminPage() {
 
   const handleEditUserCoursesClick = (user: User) => {
     setSelectedUser(user);
-    // Mocking user courses as the backend endpoint is not available
-    if (courses.length > 0) {
-      const userHasCourse = parseInt(user._id.slice(-1), 16) % 2 === 0;
-      if (userHasCourse) {
-        setUserCourses([courses[0]._id]);
-      } else if (courses.length > 1) {
-        setUserCourses([courses[1]._id]);
-      } else {
-        setUserCourses([]);
-      }
-    } else {
-      setUserCourses([]);
-    }
+    const currentUserCourseIds = user.courses?.map(course => course._id) || [];
+    setUserCourses(currentUserCourseIds);
     setIsUserCoursesFormOpen(true);
   };
 
   const handleUpdateUserCourses = async () => {
     if (!selectedUser) return;
     try {
-      console.log("Updating user courses:", selectedUser._id, userCourses);
+      await UserService.updateUserCourses(selectedUser._id, userCourses);
+      toast({
+        title: "Muvaffaqiyatli!",
+        description: `${selectedUser.first_name}ning kurslari muvaffaqiyatli yangilandi.`,
+      });
       setIsUserCoursesFormOpen(false);
       setSelectedUser(null);
       setUserCourses([]);
+      fetchUsers();
     } catch (error) {
       console.error("Foydalanuvchi kurslarini yangilashda xato:", error);
+      toast({
+        title: "Xatolik!",
+        description: "Foydalanuvchi kurslarini yangilashda xatolik yuz berdi.",
+        variant: "destructive",
+      });
     }
   };
 
