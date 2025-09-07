@@ -33,17 +33,16 @@ import UserService from "@/services/user.service";
 import { Course } from "@/types/course";
 import { Video } from "@/types/video";
 import { useToast } from "@/components/ui/use-toast";
-import { useForm } from "react-hook-form";
+import { Form, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 // Extend Video type to include frontend-specific properties for dashboard display
 interface DashboardVideo extends Video {
@@ -313,111 +312,51 @@ export default function DashboardPage() {
           </TabsList>
 
           <TabsContent value="courses">
-            <div className="grid lg:grid-cols-3 gap-6">
-              {/* Course Progress */}
-              <div className="lg:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Kurs jarayoni</CardTitle>
-                    <CardDescription>
-                      Sizning hozirgi progressingiz va keyingi darslar
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="mb-6">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium">
-                          Umumiy progress
-                        </span>
-                        <span className="text-sm text-gray-600">
-                          {Math.round(progressPercentage)}%
-                        </span>
-                      </div>
-                      <Progress value={progressPercentage} className="h-2" />
+            <Accordion type="single" collapsible className="w-full">
+              {user?.courses?.map((course) => (
+                <AccordionItem value={course._id} key={course._id}>
+                  <AccordionTrigger>
+                    <div className="flex flex-col items-start">
+                      <span className="text-lg font-semibold">{course.title}</span>
+                      <span className="text-sm text-gray-500">{course.description}</span>
                     </div>
-
+                  </AccordionTrigger>
+                  <AccordionContent>
                     <div className="space-y-4">
-                      {lessons.length > 0 ? (
-                        lessons.map((lesson) => (
-                          <div
-                            key={lesson._id}
-                            className="flex items-center justify-between p-4 border rounded-lg"
-                          >
-                            <div className="flex items-center space-x-4">
-                              <div
-                                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                  lesson.completed
-                                    ? "bg-green-100 text-green-600"
-                                    : "bg-gray-100 text-gray-400"
-                                }`}
-                              >
-                                {lesson.completed ? (
-                                  <CheckCircle className="h-4 w-4" />
-                                ) : (
-                                  <Play className="h-4 w-4" />
-                                )}
-                              </div>
-                              <div>
-                                <h4 className="font-medium text-gray-900">
-                                  {lesson.title}
-                                </h4>
-                                <p className="text-sm text-gray-600">
-                                  Modul {lesson.module} •{" "}
-                                  {lesson.duration
-                                    ? `${lesson.duration} min`
-                                    : "N/A"}
-                                </p>
-                              </div>
-                            </div>
-                            <Button
-                              size="sm"
-                              variant={lesson.completed ? "outline" : "default"}
-                              className={
-                                lesson.completed
-                                  ? ""
-                                  : "bg-red-600 hover:bg-red-700"
-                              }
+                      {course.videos.map((video) => (
+                        <div
+                          key={video._id}
+                          className="flex items-center justify-between p-4 border rounded-lg"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div
+                              className={`w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 text-gray-400`}
                             >
-                              {lesson.completed ? "Qayta ko'rish" : "Boshlash"}
-                            </Button>
+                              <Play className="h-4 w-4" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">
+                                {video.title}
+                              </h4>
+                              <p className="text-sm text-gray-600">
+                                {video.duration ? `${video.duration} min` : "N/A"}
+                              </p>
+                            </div>
                           </div>
-                        ))
-                      ) : (
-                        <p className="text-gray-600">
-                          Hozircha darslar mavjud emas.
-                        </p>
-                      )}
+                          <Button
+                            size="sm"
+                            onClick={() => router.push(`/watch/${video.url.split("/").pop()}`)}
+                            className="bg-red-600 hover:bg-red-700"
+                          >
+                            Boshlash
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Current Plan */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Joriy tarif</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center">
-                      <Badge className="mb-2 bg-red-100 text-red-800">
-                        {userInfo.plan}
-                      </Badge>
-                      <p className="text-sm text-gray-600 mb-4">
-                        Amal qiladi: {userInfo.planExpiry} gacha
-                      </p>
-                      <Button
-                        variant="outline"
-                        className="w-full bg-transparent"
-                      >
-                        Tarifni o'zgartirish
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </TabsContent>
 
           <TabsContent value="profile">
@@ -438,6 +377,7 @@ export default function DashboardPage() {
                       <FormField
                         control={form.control}
                         name="first_name"
+                        defaultValue={user?.first_name || ""}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Ism</FormLabel>
@@ -445,8 +385,6 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Ismingiz"
                                 {...field}
-                                name="first_name"
-                                defaultValue={user?.first_name}
                               />
                             </FormControl>
                             <FormMessage />
@@ -456,6 +394,7 @@ export default function DashboardPage() {
                       <FormField
                         control={form.control}
                         name="last_name"
+                        defaultValue={user?.last_name || ""}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Familiya</FormLabel>
@@ -463,8 +402,6 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Familiyangiz"
                                 {...field}
-                                name="last_name"
-                                defaultValue={user?.last_name}
                               />
                             </FormControl>
                             <FormMessage />
@@ -474,6 +411,7 @@ export default function DashboardPage() {
                       <FormField
                         control={form.control}
                         name="email"
+                        defaultValue={user?.email || ""}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Email</FormLabel>
@@ -482,8 +420,6 @@ export default function DashboardPage() {
                                 placeholder="Emailingiz"
                                 {...field}
                                 type="email"
-                                name="email"
-                                defaultValue={user?.email}
                               />
                             </FormControl>
                             <FormMessage />
@@ -500,8 +436,6 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Telefon raqamingiz"
                                 {...field}
-                                defaultValue={user?.phone}
-                                name="phone"
                               />
                             </FormControl>
                             <FormMessage />
@@ -519,7 +453,6 @@ export default function DashboardPage() {
                                 type="password"
                                 placeholder="Yangi parol"
                                 {...field}
-                                name="password"
                               />
                             </FormControl>
                             <FormMessage />

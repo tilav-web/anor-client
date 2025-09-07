@@ -1,3 +1,5 @@
+import { Course } from "./course";
+
 export enum Role {
   ADMIN = "admin",
   USER = "user",
@@ -10,6 +12,7 @@ export interface User {
   phone: string;
   email: string;
   balance: number;
+  courses: Course[];
   role: Role;
   status: boolean;
   createdAt: string;
