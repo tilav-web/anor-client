@@ -57,8 +57,12 @@ export default function DashboardPage() {
   const { toast } = useToast();
 
   const formSchema = z.object({
-    first_name: z.string().min(2, { message: "Ism kamida 2 harfdan iborat bo'lishi kerak." }),
-    last_name: z.string().min(2, { message: "Familiya kamida 2 harfdan iborat bo'lishi kerak." }),
+    first_name: z
+      .string()
+      .min(2, { message: "Ism kamida 2 harfdan iborat bo'lishi kerak." }),
+    last_name: z
+      .string()
+      .min(2, { message: "Familiya kamida 2 harfdan iborat bo'lishi kerak." }),
     email: z.string().email({ message: "Noto'g'ri email format." }),
     phone: z.string().min(9, { message: "Noto'g'ri telefon raqam format." }),
     password: z.string().optional(),
@@ -263,7 +267,24 @@ export default function DashboardPage() {
                     {userInfo.balance.toLocaleString()} so'm
                   </p>
                 </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" stroke-lineca="round" stroke-linejoin="round" className="lucide lucide-wallet h-8 w-8 text-purple-600"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h12a2 2 0 0 1 0 4H5a2 2 0 0 0 0 4h12a2 2 0 0 0 2-2v-3"/><path d="M22 7V4a1 1 0 0 0-1-1H3a2 2 0 0 0 0 4h18a2 2 0 0 1 0 4H3a2 2 0 0 0 0 4h18a2 2 0 0 0 2-2v-3"/><path d="M3 7V4a1 1 0 0 1 1-1h15a1 1 0 0 1 1 1v3"/><path d="M21 11V8a1 1 0 0 1 1-1h-2"/><path d="M7 12h1"/></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  stroke-lineca="round"
+                  stroke-linejoin="round"
+                  className="lucide lucide-wallet h-8 w-8 text-purple-600"
+                >
+                  <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h12a2 2 0 0 1 0 4H5a2 2 0 0 0 0 4h12a2 2 0 0 0 2-2v-3" />
+                  <path d="M22 7V4a1 1 0 0 0-1-1H3a2 2 0 0 0 0 4h18a2 2 0 0 1 0 4H3a2 2 0 0 0 0 4h18a2 2 0 0 0 2-2v-3" />
+                  <path d="M3 7V4a1 1 0 0 1 1-1h15a1 1 0 0 1 1 1v3" />
+                  <path d="M21 11V8a1 1 0 0 1 1-1h-2" />
+                  <path d="M7 12h1" />
+                </svg>
               </div>
             </CardContent>
           </Card>
@@ -409,7 +430,10 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
                     <div className="grid md:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
@@ -418,7 +442,11 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Ism</FormLabel>
                             <FormControl>
-                              <Input placeholder="Ismingiz" {...field} />
+                              <Input
+                                placeholder="Ismingiz"
+                                {...field}
+                                value={user?.first_name}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -431,7 +459,11 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Familiya</FormLabel>
                             <FormControl>
-                              <Input placeholder="Familiyangiz" {...field} />
+                              <Input
+                                placeholder="Familiyangiz"
+                                {...field}
+                                value={user?.last_name}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -444,7 +476,11 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                              <Input placeholder="Emailingiz" {...field} />
+                              <Input
+                                placeholder="Emailingiz"
+                                {...field}
+                                value={user?.email}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -457,7 +493,11 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Telefon</FormLabel>
                             <FormControl>
-                              <Input placeholder="Telefon raqamingiz" {...field} />
+                              <Input
+                                placeholder="Telefon raqamingiz"
+                                {...field}
+                                value={user?.phone}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -470,14 +510,21 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Yangi parol (ixtiyoriy)</FormLabel>
                             <FormControl>
-                              <Input type="password" placeholder="Yangi parol" {...field} />
+                              <Input
+                                type="password"
+                                placeholder="Yangi parol"
+                                {...field}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                    <Button type="submit" className="bg-red-600 hover:bg-red-700">
+                    <Button
+                      type="submit"
+                      className="bg-red-600 hover:bg-red-700"
+                    >
                       Saqlash
                     </Button>
                   </form>
