@@ -402,7 +402,40 @@ export default function AdminPage() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="videos">{/* ... Videos Tab ... */}</TabsContent>
+                    <TabsContent value="videos">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle>Videolar boshqaruvi</CardTitle>
+                  <Button onClick={() => setIsVideoUploadFormOpen(true)} className="bg-red-600 hover:bg-red-700"><Upload className="h-4 w-4 mr-2" />Yangi video yuklash</Button>
+                </div>
+                <CardDescription>Barcha yuklangan videolarni boshqaring</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {loading ? <p>Videolar yuklanmoqda...</p> : videos.length === 0 ? <p>Hozircha videolar mavjud emas.</p> : (
+                  <Table>
+                    <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead>Tavsif</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
+                    <TableBody>
+                      {videos.map((video) => (
+                        <TableRow key={video._id}>
+                          <TableCell className="font-medium">
+                            <Link href={`/watch/${video.url.split('/').pop()}`} className="hover:underline" target="_blank">
+                              {video.title}
+                            </Link>
+                          </TableCell>
+                          <TableCell>{video.description}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditVideoClick(video)}><Edit className="h-4 w-4" /></Button>
+                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleDeleteVideo(video._id)}><Trash2 className="h-4 w-4" /></Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
           <TabsContent value="settings">{/* ... Settings Tab ... */}</TabsContent>
         </Tabs>
       </div>
@@ -474,8 +507,55 @@ export default function AdminPage() {
       </Dialog>
 
       {/* Other Dialogs: Video Upload, Video Edit, User Courses */}
-      <Dialog open={isVideoUploadFormOpen} onOpenChange={setIsVideoUploadFormOpen}>{/* ... */}</Dialog>
-      <Dialog open={isVideoEditFormOpen} onOpenChange={setIsVideoEditFormOpen}>{/* ... */}</Dialog>
+            <Dialog open={isVideoUploadFormOpen} onOpenChange={setIsVideoUploadFormOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Yangi video yuklash</DialogTitle>
+            <DialogDescription>Videoni yuklang va unga sarlavha va tavsif qo'shing.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="video-title" className="text-right">Sarlavha</Label>
+              <Input id="video-title" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="video-description" className="text-right">Tavsif</Label>
+              <Textarea id="video-description" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="video-file" className="text-right">Video fayli</Label>
+              <Input id="video-file" type="file" onChange={(e) => setCurrentVideoFile(e.target.files ? e.target.files[0] : null)} className="col-span-3" />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={handleVideoUpload} disabled={isUploading} className="bg-red-600 hover:bg-red-700">
+              {isUploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 
+              {isUploading ? "Yuklanmoqda..." : "Yuklash"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+            <Dialog open={isVideoEditFormOpen} onOpenChange={setIsVideoEditFormOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Videoni tahrirlash</DialogTitle>
+            <DialogDescription>Video ma'lumotlarini o'zgartirishingiz mumkin.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-video-title" className="text-right">Sarlavha</Label>
+              <Input id="edit-video-title" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-video-description" className="text-right">Tavsif</Label>
+              <Textarea id="edit-video-description" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Button onClick={handleUpdateVideo} className="bg-red-600 hover:bg-red-700">O'zgarishlarni saqlash</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <Dialog open={isUserCoursesFormOpen} onOpenChange={setIsUserCoursesFormOpen}>{/* ... */}</Dialog>
     </div>
   );
