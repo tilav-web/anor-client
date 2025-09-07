@@ -42,7 +42,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 // Extend Video type to include frontend-specific properties for dashboard display
 interface DashboardVideo extends Video {
@@ -181,6 +188,7 @@ export default function DashboardPage() {
       </div>
     );
   }
+  console.log(user);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -213,8 +221,6 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        
-
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-6">
@@ -229,8 +235,12 @@ export default function DashboardPage() {
                 <AccordionItem value={course._id} key={course._id}>
                   <AccordionTrigger>
                     <div className="flex flex-col items-start">
-                      <span className="text-lg font-semibold">{course.title}</span>
-                      <span className="text-sm text-gray-500">{course.description}</span>
+                      <span className="text-lg font-semibold">
+                        {course.title}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {course.description}
+                      </span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent>
@@ -251,13 +261,19 @@ export default function DashboardPage() {
                                 {video.title}
                               </h4>
                               <p className="text-sm text-gray-600">
-                                {video.duration ? `${video.duration} min` : "N/A"}
+                                {video.duration
+                                  ? `${video.duration} min`
+                                  : "N/A"}
                               </p>
                             </div>
                           </div>
                           <Button
                             size="sm"
-                            onClick={() => router.push(`/watch/${video.url.split("/").pop()}`)}
+                            onClick={() =>
+                              router.push(
+                                `/watch/${video.url.split("/").pop()}`
+                              )
+                            }
                             className="bg-red-600 hover:bg-red-700"
                           >
                             Boshlash
@@ -294,10 +310,7 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Ism</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="Ismingiz"
-                                {...field}
-                              />
+                              <Input placeholder="Ismingiz" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -311,10 +324,7 @@ export default function DashboardPage() {
                           <FormItem>
                             <FormLabel>Familiya</FormLabel>
                             <FormControl>
-                              <Input
-                                placeholder="Familiyangiz"
-                                {...field}
-                              />
+                              <Input placeholder="Familiyangiz" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
