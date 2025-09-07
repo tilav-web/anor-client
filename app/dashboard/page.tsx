@@ -33,7 +33,7 @@ import UserService from "@/services/user.service";
 import { Course } from "@/types/course";
 import { Video } from "@/types/video";
 import { useToast } from "@/components/ui/use-toast";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -42,7 +42,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 // Extend Video type to include frontend-specific properties for dashboard display
 interface DashboardVideo extends Video {
@@ -174,7 +174,7 @@ export default function DashboardPage() {
     fetchDashboardData();
   }, [user, router]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-lg text-gray-700">Ma'lumotlar yuklanmoqda...</p>
