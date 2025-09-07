@@ -445,6 +445,7 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Ismingiz"
                                 {...field}
+                                name="first_name"
                                 defaultValue={user?.first_name}
                               />
                             </FormControl>
@@ -462,6 +463,7 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Familiyangiz"
                                 {...field}
+                                name="last_name"
                                 defaultValue={user?.last_name}
                               />
                             </FormControl>
@@ -479,6 +481,8 @@ export default function DashboardPage() {
                               <Input
                                 placeholder="Emailingiz"
                                 {...field}
+                                type="email"
+                                name="email"
                                 defaultValue={user?.email}
                               />
                             </FormControl>
@@ -497,6 +501,7 @@ export default function DashboardPage() {
                                 placeholder="Telefon raqamingiz"
                                 {...field}
                                 defaultValue={user?.phone}
+                                name="phone"
                               />
                             </FormControl>
                             <FormMessage />
@@ -514,6 +519,7 @@ export default function DashboardPage() {
                                 type="password"
                                 placeholder="Yangi parol"
                                 {...field}
+                                name="password"
                               />
                             </FormControl>
                             <FormMessage />
