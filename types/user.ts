@@ -1,6 +1,6 @@
 export enum Role {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = "admin",
+  USER = "user",
 }
 
 export interface User {
@@ -11,6 +11,7 @@ export interface User {
   email: string;
   balance: number;
   role: Role;
+  status: boolean;
   createdAt: string;
   updatedAt: string;
 }

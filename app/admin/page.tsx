@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -62,7 +62,7 @@ import { Video } from "@/types/video";
 import { VideoCombobox } from "@/components/ui/video-combobox";
 import { CourseCombobox } from "@/components/ui/course-combobox";
 import { useDebounce } from "@/hooks/use-debounce";
-import Link from 'next/link';
+import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 
 export default function AdminPage() {
@@ -119,7 +119,9 @@ export default function AdminPage() {
       router.push("/dashboard");
       return;
     }
-    Promise.all([fetchCourses(), fetchVideos()]).finally(() => setLoading(false));
+    Promise.all([fetchCourses(), fetchVideos()]).finally(() =>
+      setLoading(false)
+    );
   }, [user, router]);
 
   useEffect(() => {
@@ -149,7 +151,11 @@ export default function AdminPage() {
   const fetchUsers = async () => {
     setUsersLoading(true);
     try {
-      const { data, total } = await UserService.findAll(usersPage, 10, debouncedUsersSearchTerm);
+      const { data, total } = await UserService.findAll(
+        usersPage,
+        10,
+        debouncedUsersSearchTerm
+      );
       setUsers(data);
       setUsersTotalPages(Math.ceil(total / 10));
     } catch (error) {
@@ -201,7 +207,9 @@ export default function AdminPage() {
       setCourseDescription(course.description || "");
       setCoursePrice(course.price);
       setCourseCategory(course.category || []);
-      setCourseVideos(course.videos.map(v => typeof v === 'string' ? v : v._id));
+      setCourseVideos(
+        course.videos.map((v) => (typeof v === "string" ? v : v._id))
+      );
     } else {
       resetCourseForm();
     }
@@ -219,11 +227,11 @@ export default function AdminPage() {
   };
 
   const handleRemoveVideoFromForm = (videoId: string) => {
-    setCourseVideos(prev => prev.filter(id => id !== videoId));
+    setCourseVideos((prev) => prev.filter((id) => id !== videoId));
   };
 
   const handleAddVideosToForm = () => {
-    setCourseVideos(prev => [...new Set([...prev, ...videosToAddToForm])]);
+    setCourseVideos((prev) => [...new Set([...prev, ...videosToAddToForm])]);
     setVideosToAddToForm([]);
   };
 
@@ -236,7 +244,10 @@ export default function AdminPage() {
     }
     setIsUploading(true);
     try {
-      const createVideoDto: CreateVideoDto = { title: videoTitle, description: videoDescription };
+      const createVideoDto: CreateVideoDto = {
+        title: videoTitle,
+        description: videoDescription,
+      };
       await VideoService.create(currentVideoFile, createVideoDto);
       fetchVideos();
       alert("Video muvaffaqiyatli yuklandi!");
@@ -262,7 +273,10 @@ export default function AdminPage() {
   const handleUpdateVideo = async () => {
     if (!selectedVideo) return;
     try {
-      const updateVideoDto: UpdateVideoDto = { title: videoTitle, description: videoDescription };
+      const updateVideoDto: UpdateVideoDto = {
+        title: videoTitle,
+        description: videoDescription,
+      };
       await VideoService.update(selectedVideo._id, updateVideoDto);
       fetchVideos();
       setIsVideoEditFormOpen(false);
@@ -275,7 +289,9 @@ export default function AdminPage() {
   };
 
   const handleDeleteVideo = async (id: string) => {
-    if (window.confirm("Siz rostdan ham video ma'lumotlarini o'chirmoqchimisiz?")) {
+    if (
+      window.confirm("Siz rostdan ham video ma'lumotlarini o'chirmoqchimisiz?")
+    ) {
       try {
         await VideoService.remove(id);
         fetchVideos();
@@ -329,8 +345,24 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const pendingPayments = [
-    { id: 1, user: "Malika Karimova", email: "malika@example.com", plan: "Optimal", amount: "499,000 so'm", date: "2024-01-20", status: "pending" },
-    { id: 2, user: "Nodira Tosheva", email: "nodira@example.com", plan: "VIP", amount: "799,000 so'm", date: "2024-01-19", status: "pending" },
+    {
+      id: 1,
+      user: "Malika Karimova",
+      email: "malika@example.com",
+      plan: "Optimal",
+      amount: "499,000 so'm",
+      date: "2024-01-20",
+      status: "pending",
+    },
+    {
+      id: 2,
+      user: "Nodira Tosheva",
+      email: "nodira@example.com",
+      plan: "VIP",
+      amount: "799,000 so'm",
+      date: "2024-01-19",
+      status: "pending",
+    },
   ];
 
   const stats = {
@@ -340,8 +372,10 @@ export default function AdminPage() {
     totalRevenue: "45,600,000 so'm",
   };
 
-  const handleApprovePayment = (id: number) => console.log("Approved payment:", id);
-  const handleRejectPayment = (id: number) => console.log("Rejected payment:", id);
+  const handleApprovePayment = (id: number) =>
+    console.log("Approved payment:", id);
+  const handleRejectPayment = (id: number) =>
+    console.log("Rejected payment:", id);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -349,11 +383,18 @@ export default function AdminPage() {
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Uyg'unlik Admin</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Uyg'unlik Admin
+            </h1>
           </div>
           <div className="flex items-center space-x-4">
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">Administrator</Badge>
-            <Button variant="outline" size="sm"><Settings className="h-4 w-4 mr-2" />Sozlamalar</Button>
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              Administrator
+            </Badge>
+            <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              Sozlamalar
+            </Button>
           </div>
         </div>
       </header>
@@ -361,14 +402,66 @@ export default function AdminPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-          <p className="text-gray-600">Foydalanuvchilar, to'lovlar va kurslarni boshqaring</p>
+          <p className="text-gray-600">
+            Foydalanuvchilar, to'lovlar va kurslarni boshqaring
+          </p>
         </div>
 
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Jami foydalanuvchilar</p><p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p></div><Users className="h-8 w-8 text-blue-600" /></div></CardContent></Card>
-          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Faol foydalanuvchilar</p><p className="text-2xl font-bold text-gray-900">{stats.activeUsers}</p></div><CheckCircle className="h-8 w-8 text-green-600" /></div></CardContent></Card>
-          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Kutilayotgan to'lovlar</p><p className="text-2xl font-bold text-gray-900">{stats.pendingPayments}</p></div><CreditCard className="h-8 w-8 text-yellow-600" /></div></CardContent></Card>
-          <Card><CardContent className="p-6"><div className="flex items-center justify-between"><div><p className="text-sm text-gray-600">Jami daromad</p><p className="text-lg font-bold text-gray-900">{stats.totalRevenue}</p></div><BookOpen className="h-8 w-8 text-red-600" /></div></CardContent></Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Jami foydalanuvchilar</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalUsers}
+                  </p>
+                </div>
+                <Users className="h-8 w-8 text-blue-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Faol foydalanuvchilar</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.activeUsers}
+                  </p>
+                </div>
+                <CheckCircle className="h-8 w-8 text-green-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">
+                    Kutilayotgan to'lovlar
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.pendingPayments}
+                  </p>
+                </div>
+                <CreditCard className="h-8 w-8 text-yellow-600" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Jami daromad</p>
+                  <p className="text-lg font-bold text-gray-900">
+                    {stats.totalRevenue}
+                  </p>
+                </div>
+                <BookOpen className="h-8 w-8 text-red-600" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         <Tabs defaultValue="courses">
@@ -380,18 +473,31 @@ export default function AdminPage() {
             <TabsTrigger value="settings">Sozlamalar</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="payments">{/* ... Payments Tab ... */}</TabsContent>
-                    <TabsContent value="users">
+          <TabsContent value="payments">
+            {/* ... Payments Tab ... */}
+          </TabsContent>
+          <TabsContent value="users">
             <Card>
               <CardHeader>
                 <CardTitle>Foydalanuvchilarni boshqarish</CardTitle>
-                <CardDescription>Foydalanuvchilarni qidiring, ko'ring va ularning kurslarini boshqaring.</CardDescription>
+                <CardDescription>
+                  Foydalanuvchilarni qidiring, ko'ring va ularning kurslarini
+                  boshqaring.
+                </CardDescription>
                 <div className="pt-4">
-                  <Input placeholder="Foydalanuvchilarni ism yoki email bo'yicha qidirish..." value={usersSearchTerm} onChange={(e) => setUsersSearchTerm(e.target.value)} />
+                  <Input
+                    placeholder="Foydalanuvchilarni ism yoki email bo'yicha qidirish..."
+                    value={usersSearchTerm}
+                    onChange={(e) => setUsersSearchTerm(e.target.value)}
+                  />
                 </div>
               </CardHeader>
               <CardContent>
-                {usersLoading ? <p>Foydalanuvchilar yuklanmoqda...</p> : users.length === 0 ? <p>Foydalanuvchilar topilmadi.</p> : (
+                {usersLoading ? (
+                  <p>Foydalanuvchilar yuklanmoqda...</p>
+                ) : users.length === 0 ? (
+                  <p>Foydalanuvchilar topilmadi.</p>
+                ) : (
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -405,12 +511,36 @@ export default function AdminPage() {
                     <TableBody>
                       {users.map((user) => (
                         <TableRow key={user._id}>
-                          <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell className="font-medium">
+                            {user.first_name}
+                          </TableCell>
                           <TableCell>{user.email}</TableCell>
-                          <TableCell><Badge variant={user.role === Role.ADMIN ? "destructive" : "secondary"}>{user.role}</Badge></TableCell>
-                          <TableCell><Badge variant={user.isActive ? "default" : "outline"}>{user.isActive ? "Faol" : "Nofaol"}</Badge></TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                user.role === Role.ADMIN
+                                  ? "destructive"
+                                  : "secondary"
+                              }
+                            >
+                              {user.role}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={user.status ? "default" : "outline"}
+                            >
+                              {user.status ? "Faol" : "Nofaol"}
+                            </Badge>
+                          </TableCell>
                           <TableCell className="text-right">
-                            <Button variant="outline" size="sm" onClick={() => handleEditUserCoursesClick(user)}><Edit className="h-4 w-4" /></Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEditUserCoursesClick(user)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -418,8 +548,22 @@ export default function AdminPage() {
                   </Table>
                 )}
                 <div className="flex items-center justify-end space-x-2 py-4">
-                  <Button variant="outline" size="sm" onClick={() => setUsersPage(p => Math.max(1, p - 1))} disabled={usersPage === 1}>Oldingisi</Button>
-                  <Button variant="outline" size="sm" onClick={() => setUsersPage(p => p + 1)} disabled={usersPage === usersTotalPages}>Keyingisi</Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setUsersPage((p) => Math.max(1, p - 1))}
+                    disabled={usersPage === 1}
+                  >
+                    Oldingisi
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setUsersPage((p) => p + 1)}
+                    disabled={usersPage === usersTotalPages}
+                  >
+                    Keyingisi
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -430,24 +574,62 @@ export default function AdminPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Kurslar boshqaruvi</CardTitle>
-                  <Button onClick={() => handleOpenCourseForm(null)} className="bg-red-600 hover:bg-red-700"><PlusCircle className="h-4 w-4 mr-2" />Yangi kurs</Button>
+                  <Button
+                    onClick={() => handleOpenCourseForm(null)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    <PlusCircle className="h-4 w-4 mr-2" />
+                    Yangi kurs
+                  </Button>
                 </div>
-                <CardDescription>Kurs materiallarini va darslarni boshqaring</CardDescription>
+                <CardDescription>
+                  Kurs materiallarini va darslarni boshqaring
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                {loading ? <p>Kurslar yuklanmoqda...</p> : courses.length === 0 ? <p>Hozircha kurslar mavjud emas.</p> : (
+                {loading ? (
+                  <p>Kurslar yuklanmoqda...</p>
+                ) : courses.length === 0 ? (
+                  <p>Hozircha kurslar mavjud emas.</p>
+                ) : (
                   <Table>
-                    <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead>Narxi</TableHead><TableHead>Kategoriya</TableHead><TableHead>Darslar soni</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Sarlavha</TableHead>
+                        <TableHead>Narxi</TableHead>
+                        <TableHead>Kategoriya</TableHead>
+                        <TableHead>Darslar soni</TableHead>
+                        <TableHead className="text-right">Harakatlar</TableHead>
+                      </TableRow>
+                    </TableHeader>
                     <TableBody>
                       {courses.map((course) => (
                         <TableRow key={course._id}>
-                          <TableCell className="font-medium">{course.title}</TableCell>
-                          <TableCell>{course.price.toLocaleString()} so'm</TableCell>
+                          <TableCell className="font-medium">
+                            {course.title}
+                          </TableCell>
+                          <TableCell>
+                            {course.price.toLocaleString()} so'm
+                          </TableCell>
                           <TableCell>{course.category.join(", ")}</TableCell>
                           <TableCell>{course.videos.length}</TableCell>
                           <TableCell className="text-right">
-                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleOpenCourseForm(course)}><Edit className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleDeleteCourse(course._id)}><Trash2 className="h-4 w-4" /></Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="mr-2"
+                              onClick={() => handleOpenCourseForm(course)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                              onClick={() => handleDeleteCourse(course._id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -458,31 +640,67 @@ export default function AdminPage() {
             </Card>
           </TabsContent>
 
-                    <TabsContent value="videos">
+          <TabsContent value="videos">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Videolar boshqaruvi</CardTitle>
-                  <Button onClick={() => setIsVideoUploadFormOpen(true)} className="bg-red-600 hover:bg-red-700"><Upload className="h-4 w-4 mr-2" />Yangi video yuklash</Button>
+                  <Button
+                    onClick={() => setIsVideoUploadFormOpen(true)}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Yangi video yuklash
+                  </Button>
                 </div>
-                <CardDescription>Barcha yuklangan videolarni boshqaring</CardDescription>
+                <CardDescription>
+                  Barcha yuklangan videolarni boshqaring
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                {loading ? <p>Videolar yuklanmoqda...</p> : videos.length === 0 ? <p>Hozircha videolar mavjud emas.</p> : (
+                {loading ? (
+                  <p>Videolar yuklanmoqda...</p>
+                ) : videos.length === 0 ? (
+                  <p>Hozircha videolar mavjud emas.</p>
+                ) : (
                   <Table>
-                    <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead>Tavsif</TableHead><TableHead className="text-right">Harakatlar</TableHead></TableRow></TableHeader>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Sarlavha</TableHead>
+                        <TableHead>Tavsif</TableHead>
+                        <TableHead className="text-right">Harakatlar</TableHead>
+                      </TableRow>
+                    </TableHeader>
                     <TableBody>
                       {videos.map((video) => (
                         <TableRow key={video._id}>
                           <TableCell className="font-medium">
-                            <Link href={`/watch/${video.url.split('/').pop()}`} className="hover:underline" target="_blank">
+                            <Link
+                              href={`/watch/${video.url.split("/").pop()}`}
+                              className="hover:underline"
+                              target="_blank"
+                            >
                               {video.title}
                             </Link>
                           </TableCell>
                           <TableCell>{video.description}</TableCell>
                           <TableCell className="text-right">
-                            <Button variant="outline" size="sm" className="mr-2" onClick={() => handleEditVideoClick(video)}><Edit className="h-4 w-4" /></Button>
-                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleDeleteVideo(video._id)}><Trash2 className="h-4 w-4" /></Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="mr-2"
+                              onClick={() => handleEditVideoClick(video)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                              onClick={() => handleDeleteVideo(video._id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -492,7 +710,9 @@ export default function AdminPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="settings">{/* ... Settings Tab ... */}</TabsContent>
+          <TabsContent value="settings">
+            {/* ... Settings Tab ... */}
+          </TabsContent>
         </Tabs>
       </div>
 
@@ -500,44 +720,118 @@ export default function AdminPage() {
       <Dialog open={isCourseFormOpen} onOpenChange={setIsCourseFormOpen}>
         <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
           <DialogHeader>
-            <DialogTitle>{selectedCourse ? "Kursni tahrirlash" : "Yangi kurs yaratish"}</DialogTitle>
-            <DialogDescription>{selectedCourse ? "Kurs ma'lumotlarini va unga biriktirilgan videolarni boshqaring." : "Yangi kurs uchun ma'lumotlarni kiriting."}</DialogDescription>
+            <DialogTitle>
+              {selectedCourse ? "Kursni tahrirlash" : "Yangi kurs yaratish"}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedCourse
+                ? "Kurs ma'lumotlarini va unga biriktirilgan videolarni boshqaring."
+                : "Yangi kurs uchun ma'lumotlarni kiriting."}
+            </DialogDescription>
           </DialogHeader>
           <div className="flex-grow overflow-y-auto pr-6">
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="title" className="text-right">Sarlavha</Label><Input id="title" value={courseTitle} onChange={(e) => setCourseTitle(e.target.value)} className="col-span-3" /></div>
-              <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="description" className="text-right">Tavsif</Label><Textarea id="description" value={courseDescription} onChange={(e) => setCourseDescription(e.target.value)} className="col-span-3" /></div>
-              <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="price" className="text-right">Narxi</Label><Input id="price" type="number" value={coursePrice} onChange={(e) => setCoursePrice(parseFloat(e.target.value))} className="col-span-3" /></div>
-              <div className="grid grid-cols-4 items-center gap-4"><Label htmlFor="category" className="text-right">Kategoriya</Label><Input id="category" value={courseCategory.join(", ")} onChange={(e) => setCourseCategory(e.target.value.split(",").map((s) => s.trim()))} className="col-span-3" placeholder="Masalan: Ayollar salomatligi, Gormonlar" /></div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="title" className="text-right">
+                  Sarlavha
+                </Label>
+                <Input
+                  id="title"
+                  value={courseTitle}
+                  onChange={(e) => setCourseTitle(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="description" className="text-right">
+                  Tavsif
+                </Label>
+                <Textarea
+                  id="description"
+                  value={courseDescription}
+                  onChange={(e) => setCourseDescription(e.target.value)}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="price" className="text-right">
+                  Narxi
+                </Label>
+                <Input
+                  id="price"
+                  type="number"
+                  value={coursePrice}
+                  onChange={(e) => setCoursePrice(parseFloat(e.target.value))}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="category" className="text-right">
+                  Kategoriya
+                </Label>
+                <Input
+                  id="category"
+                  value={courseCategory.join(", ")}
+                  onChange={(e) =>
+                    setCourseCategory(
+                      e.target.value.split(",").map((s) => s.trim())
+                    )
+                  }
+                  className="col-span-3"
+                  placeholder="Masalan: Ayollar salomatligi, Gormonlar"
+                />
+              </div>
             </div>
-            
+
             <Separator className="my-6" />
 
             <div>
               <h3 className="text-lg font-medium mb-4">Kurs Videolari</h3>
               <div className="rounded-md border mb-4">
                 <Table>
-                  <TableHeader><TableRow><TableHead>Sarlavha</TableHead><TableHead className="text-right">Harakat</TableHead></TableRow></TableHeader>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Sarlavha</TableHead>
+                      <TableHead className="text-right">Harakat</TableHead>
+                    </TableRow>
+                  </TableHeader>
                   <TableBody>
                     {courseVideos.length > 0 ? (
-                      courseVideos.map(videoId => {
-                        const video = videos.find(v => v._id === videoId);
+                      courseVideos.map((videoId) => {
+                        const video = videos.find((v) => v._id === videoId);
                         if (!video) return null;
                         return (
                           <TableRow key={videoId}>
                             <TableCell className="font-medium">
-                              <Link href={`/watch/${video.url.split('/').pop()}`} className="hover:underline" target="_blank">
+                              <Link
+                                href={`/watch/${video.url.split("/").pop()}`}
+                                className="hover:underline"
+                                target="_blank"
+                              >
                                 {video.title}
                               </Link>
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => handleRemoveVideoFromForm(videoId)}><Trash2 className="h-4 w-4" /></Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                                onClick={() =>
+                                  handleRemoveVideoFromForm(videoId)
+                                }
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         );
                       })
                     ) : (
-                      <TableRow><TableCell colSpan={2} className="text-center">Bu kursga hali video qo'shilmagan.</TableCell></TableRow>
+                      <TableRow>
+                        <TableCell colSpan={2} className="text-center">
+                          Bu kursga hali video qo'shilmagan.
+                        </TableCell>
+                      </TableRow>
                     )}
                   </TableBody>
                 </Table>
@@ -547,100 +841,192 @@ export default function AdminPage() {
               <div className="flex items-center space-x-2">
                 <div className="flex-grow">
                   <VideoCombobox
-                    videos={videos.filter(video => !courseVideos.includes(video._id))}
+                    videos={videos.filter(
+                      (video) => !courseVideos.includes(video._id)
+                    )}
                     selectedVideos={videosToAddToForm}
                     onChange={setVideosToAddToForm}
                   />
                 </div>
-                <Button onClick={handleAddVideosToForm} disabled={videosToAddToForm.length === 0}><PlusCircle className="h-4 w-4 mr-2" />Qo'shish</Button>
+                <Button
+                  onClick={handleAddVideosToForm}
+                  disabled={videosToAddToForm.length === 0}
+                >
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  Qo'shish
+                </Button>
               </div>
             </div>
           </div>
           <div className="flex justify-end pt-4 border-t mt-4">
-            <Button onClick={handleSaveCourse} className="bg-red-600 hover:bg-red-700">{selectedCourse ? "O'zgarishlarni saqlash" : "Kursni yaratish"}</Button>
+            <Button
+              onClick={handleSaveCourse}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {selectedCourse ? "O'zgarishlarni saqlash" : "Kursni yaratish"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* Other Dialogs: Video Upload, Video Edit, User Courses */}
-            <Dialog open={isVideoUploadFormOpen} onOpenChange={setIsVideoUploadFormOpen}>
+      <Dialog
+        open={isVideoUploadFormOpen}
+        onOpenChange={setIsVideoUploadFormOpen}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Yangi video yuklash</DialogTitle>
-            <DialogDescription>Videoni yuklang va unga sarlavha va tavsif qo'shing.</DialogDescription>
+            <DialogDescription>
+              Videoni yuklang va unga sarlavha va tavsif qo'shing.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="video-title" className="text-right">Sarlavha</Label>
-              <Input id="video-title" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" />
+              <Label htmlFor="video-title" className="text-right">
+                Sarlavha
+              </Label>
+              <Input
+                id="video-title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+                className="col-span-3"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="video-description" className="text-right">Tavsif</Label>
-              <Textarea id="video-description" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" />
+              <Label htmlFor="video-description" className="text-right">
+                Tavsif
+              </Label>
+              <Textarea
+                id="video-description"
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
+                className="col-span-3"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="video-file" className="text-right">Video fayli</Label>
-              <Input id="video-file" type="file" onChange={(e) => setCurrentVideoFile(e.target.files ? e.target.files[0] : null)} className="col-span-3" />
+              <Label htmlFor="video-file" className="text-right">
+                Video fayli
+              </Label>
+              <Input
+                id="video-file"
+                type="file"
+                onChange={(e) =>
+                  setCurrentVideoFile(e.target.files ? e.target.files[0] : null)
+                }
+                className="col-span-3"
+              />
             </div>
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleVideoUpload} disabled={isUploading} className="bg-red-600 hover:bg-red-700">
-              {isUploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} 
+            <Button
+              onClick={handleVideoUpload}
+              disabled={isUploading}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {isUploading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isUploading ? "Yuklanmoqda..." : "Yuklash"}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-            <Dialog open={isVideoEditFormOpen} onOpenChange={setIsVideoEditFormOpen}>
+      <Dialog open={isVideoEditFormOpen} onOpenChange={setIsVideoEditFormOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Videoni tahrirlash</DialogTitle>
-            <DialogDescription>Video ma'lumotlarini o'zgartirishingiz mumkin.</DialogDescription>
+            <DialogDescription>
+              Video ma'lumotlarini o'zgartirishingiz mumkin.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-video-title" className="text-right">Sarlavha</Label>
-              <Input id="edit-video-title" value={videoTitle} onChange={(e) => setVideoTitle(e.target.value)} className="col-span-3" />
+              <Label htmlFor="edit-video-title" className="text-right">
+                Sarlavha
+              </Label>
+              <Input
+                id="edit-video-title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+                className="col-span-3"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-video-description" className="text-right">Tavsif</Label>
-              <Textarea id="edit-video-description" value={videoDescription} onChange={(e) => setVideoDescription(e.target.value)} className="col-span-3" />
+              <Label htmlFor="edit-video-description" className="text-right">
+                Tavsif
+              </Label>
+              <Textarea
+                id="edit-video-description"
+                value={videoDescription}
+                onChange={(e) => setVideoDescription(e.target.value)}
+                className="col-span-3"
+              />
             </div>
           </div>
           <div className="flex justify-end">
-            <Button onClick={handleUpdateVideo} className="bg-red-600 hover:bg-red-700">O'zgarishlarni saqlash</Button>
+            <Button
+              onClick={handleUpdateVideo}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              O'zgarishlarni saqlash
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
-            <Dialog open={isUserCoursesFormOpen} onOpenChange={setIsUserCoursesFormOpen}>
+      <Dialog
+        open={isUserCoursesFormOpen}
+        onOpenChange={setIsUserCoursesFormOpen}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Foydalanuvchi kurslarini tahrirlash</DialogTitle>
             <DialogDescription>
-              {selectedUser?.name} uchun kurslarni qo'shing yoki olib tashlang.
+              {selectedUser?.first_name} {selectedUser?.last_name} uchun kurslarni qo'shing yoki olib
+              tashlang.
             </DialogDescription>
           </DialogHeader>
           <div className="flex-grow overflow-y-auto pr-6">
             <h3 className="text-lg font-medium mb-4">Mavjud kurslar</h3>
             <div className="rounded-md border mb-4">
               <Table>
-                <TableHeader><TableRow><TableHead>Kurs nomi</TableHead><TableHead className="text-right">Harakat</TableHead></TableRow></TableHeader>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Kurs nomi</TableHead>
+                    <TableHead className="text-right">Harakat</TableHead>
+                  </TableRow>
+                </TableHeader>
                 <TableBody>
                   {userCourses.length > 0 ? (
-                    userCourses.map(courseId => {
-                      const course = courses.find(c => c._id === courseId);
+                    userCourses.map((courseId) => {
+                      const course = courses.find((c) => c._id === courseId);
                       if (!course) return null;
                       return (
                         <TableRow key={courseId}>
-                          <TableCell className="font-medium">{course.title}</TableCell>
+                          <TableCell className="font-medium">
+                            {course.title}
+                          </TableCell>
                           <TableCell className="text-right">
-                            <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent" onClick={() => setUserCourses(userCourses.filter(id => id !== courseId))}><Trash2 className="h-4 w-4" /></Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                              onClick={() =>
+                                setUserCourses(
+                                  userCourses.filter((id) => id !== courseId)
+                                )
+                              }
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
                     })
                   ) : (
-                    <TableRow><TableCell colSpan={2} className="text-center">Foydalanuvchida kurslar mavjud emas.</TableCell></TableRow>
+                    <TableRow>
+                      <TableCell colSpan={2} className="text-center">
+                        Foydalanuvchida kurslar mavjud emas.
+                      </TableCell>
+                    </TableRow>
                   )}
                 </TableBody>
               </Table>
@@ -650,19 +1036,34 @@ export default function AdminPage() {
             <div className="flex items-center space-x-2">
               <div className="flex-grow">
                 <CourseCombobox
-                  courses={courses.filter(course => !userCourses.includes(course._id))}
+                  courses={courses.filter(
+                    (course) => !userCourses.includes(course._id)
+                  )}
                   selectedCourses={coursesToAddToUser}
                   onChange={setCoursesToAddToUser}
                 />
               </div>
-              <Button onClick={() => {
-                setUserCourses([...new Set([...userCourses, ...coursesToAddToUser])]);
-                setCoursesToAddToUser([]);
-              }} disabled={coursesToAddToUser.length === 0}><PlusCircle className="h-4 w-4 mr-2" />Qo'shish</Button>
+              <Button
+                onClick={() => {
+                  setUserCourses([
+                    ...new Set([...userCourses, ...coursesToAddToUser]),
+                  ]);
+                  setCoursesToAddToUser([]);
+                }}
+                disabled={coursesToAddToUser.length === 0}
+              >
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Qo'shish
+              </Button>
             </div>
           </div>
           <div className="flex justify-end pt-4 border-t mt-4">
-            <Button onClick={handleUpdateUserCourses} className="bg-red-600 hover:bg-red-700">Saqlash</Button>
+            <Button
+              onClick={handleUpdateUserCourses}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Saqlash
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
