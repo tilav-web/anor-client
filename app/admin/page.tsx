@@ -117,7 +117,7 @@ export default function AdminPage() {
       router.push("/login");
       return;
     }
-    if (user.role !== Role.ADMIN) {
+    if (user?.role !== Role.ADMIN) {
       router.push("/dashboard");
       return;
     }
@@ -127,7 +127,7 @@ export default function AdminPage() {
   }, [user, router]);
 
   useEffect(() => {
-    if (user && user.role === Role.ADMIN) {
+    if (user && user?.role === Role.ADMIN) {
       fetchUsers();
     }
   }, [user, usersPage, debouncedUsersSearchTerm]);
@@ -307,7 +307,7 @@ export default function AdminPage() {
 
   const handleEditUserCoursesClick = (user: User) => {
     setSelectedUser(user);
-    const currentUserCourseIds = user.courses?.map(course => course._id) || [];
+    const currentUserCourseIds = user?.courses?.map(course => course._id) || [];
     setUserCourses(currentUserCourseIds);
     setIsUserCoursesFormOpen(true);
   };
@@ -315,10 +315,10 @@ export default function AdminPage() {
   const handleUpdateUserCourses = async () => {
     if (!selectedUser) return;
     try {
-      await UserService.updateUserCourses(selectedUser._id, userCourses);
+      await UserService.updateUserCourses(selectedUser?._id, userCourses);
       toast({
         title: "Muvaffaqiyatli!",
-        description: `${selectedUser.first_name}ning kurslari muvaffaqiyatli yangilandi.`,
+        description: `${selectedUser?.first_name}ning kurslari muvaffaqiyatli yangilandi.`,
       });
       setIsUserCoursesFormOpen(false);
       setSelectedUser(null);
@@ -343,40 +343,12 @@ export default function AdminPage() {
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const pendingPayments = [
-    {
-      id: 1,
-      user: "Malika Karimova",
-      email: "malika@example.com",
-      plan: "Optimal",
-      amount: "499,000 so'm",
-      date: "2024-01-20",
-      status: "pending",
-    },
-    {
-      id: 2,
-      user: "Nodira Tosheva",
-      email: "nodira@example.com",
-      plan: "VIP",
-      amount: "799,000 so'm",
-      date: "2024-01-19",
-      status: "pending",
-    },
-  ];
-
   const stats = {
-    totalUsers: 156,
-    activeUsers: 134,
-    pendingPayments: 8,
-    totalRevenue: "45,600,000 so'm",
+    totalUsers: 0,
+    activeUsers: 0,
+    pendingPayments: 0,
+    totalRevenue: "0 so'm",
   };
-
-  const handleApprovePayment = (id: number) =>
-    console.log("Approved payment:", id);
-  const handleRejectPayment = (id: number) =>
-    console.log("Rejected payment:", id);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -511,27 +483,27 @@ export default function AdminPage() {
                     </TableHeader>
                     <TableBody>
                       {users.map((user) => (
-                        <TableRow key={user._id}>
+                        <TableRow key={user?._id}>
                           <TableCell className="font-medium">
-                            {user.first_name}
+                            {user?.first_name}
                           </TableCell>
-                          <TableCell>{user.email}</TableCell>
+                          <TableCell>{user?.email}</TableCell>
                           <TableCell>
                             <Badge
                               variant={
-                                user.role === Role.ADMIN
+                                user?.role === Role.ADMIN
                                   ? "destructive"
                                   : "secondary"
                               }
                             >
-                              {user.role}
+                              {user?.role}
                             </Badge>
                           </TableCell>
                           <TableCell>
                             <Badge
-                              variant={user.status ? "default" : "outline"}
+                              variant={user?.status ? "default" : "outline"}
                             >
-                              {user.status ? "Faol" : "Nofaol"}
+                              {user?.status ? "Faol" : "Nofaol"}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right">
@@ -1051,7 +1023,7 @@ export default function AdminPage() {
                   ]);
                   setCoursesToAddToUser([]);
                 }}
-                disabled={coursesToAddToUser.length === 0}
+                disabled={coursesToAddToUser?.length === 0}
               >
                 <PlusCircle className="h-4 w-4 mr-2" />
                 Qo'shish
