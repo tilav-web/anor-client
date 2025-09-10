@@ -241,7 +241,7 @@ export default function HomePage() {
         {/* --- Hero Section --- */}
         <section className="relative h-[90vh] min-h-[600px] max-h-[800px] w-full overflow-hidden">
           <video
-            src="/women.mp4"
+            src="/client/public/women.mp4"
             poster="/images/header.jpg" // Fallback image
             autoPlay
             loop
