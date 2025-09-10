@@ -239,7 +239,7 @@ export default function HomePage() {
 
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative h-[90vh] min-h-[600px] max-h-[800px] w-full overflow-hidden">
+        <section className="relative h-screen w-full overflow-hidden">
           <video
             src="/women.mp4"
             poster="/images/header.jpg" // Fallback image
@@ -260,11 +260,11 @@ export default function HomePage() {
               <img
                 src="/images/logo-decorated.png"
                 alt="Uyg'unlik Logo"
-                className="h-24 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                className="h-20 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
               />
             </motion.div>
             <motion.h1
-              className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -272,7 +272,7 @@ export default function HomePage() {
               Tabiiy usulda sog'lom hayot
             </motion.h1>
             <motion.p
-              className="max-w-2xl mx-auto text-lg md:text-xl text-white/90 mb-10"
+              className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-white/90 mb-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
