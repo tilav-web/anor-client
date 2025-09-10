@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Heart,
   Shield,
@@ -15,10 +15,10 @@ import {
   Minus,
   Menu,
   X,
-} from 'lucide-react';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useUserStore } from '@/store/user.store';
+} from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { useUserStore } from "@/store/user.store";
 
 // FAQ Accordion Component
 const FAQAccordion = () => {
@@ -34,11 +34,11 @@ const FAQAccordion = () => {
 
   const faqData = [
     {
-      question: 'Metod qanchalik ishonchli? Homilador bo\'lib qolmaymanmi?',
+      question: "Metod qanchalik ishonchli? Homilador bo'lib qolmaymanmi?",
       answer: `Fertillikni kuzatishning Simptotermal Metodi ilmiy tadqiqotlar bo'yicha 99,6% aniqlikka ega. Foydalanuvchi kuzatuv ishlarini doimiy va aniq olib borsa, ko'zlangan maqsadga erishiladi. Agar Foydalanuvchi kuzatuv ishlarini to'liq amalga oshirmasa, xatolik (saqlanishni ko'zda tutganlarda - homiladorlik) yuzaga kelsa - bu faqatgina juftlikning zimmasida bo'ladi, metoddagi kamchilikda emas.`,
     },
     {
-      question: 'Spiralim bor, kursda qatnashish uchun oldirishim kerakmi?',
+      question: "Spiralim bor, kursda qatnashish uchun oldirishim kerakmi?",
       answer: `Ha, kurs boshlanishidan oldin spiralni oldirgan, garmonal tabletkalar qabul qilsangiz, ularni ichishni to'xtatgan bo'lishingiz kerak.`,
     },
     {
@@ -46,7 +46,7 @@ const FAQAccordion = () => {
       answer: `Albatta. Kuzatuvlarga asoslanib, barcha ayollar tug'ruqdan keyingi 3 haftada fertil (unumdor) bo'lmasliklari aniqlangan. Undan keyingi davrda, emizishning to'liq yoki aralash ekanligiga qarab, STM qoidalari bo'yicha kuzatuvni boshlashingiz mumkin.`,
     },
     {
-      question: 'Hali turmushga chiqmagan qiz bolaman. Kurs men uchun foydali bo\'ladimi?',
+      question: "Hali turmushga chiqmagan qiz bolaman. Kurs men uchun foydali bo'ladimi?",
       answer: `Bu kursda har bir qiz va ayol bilishi shart bo'lgan hayz ilmi, o'ziga g'amxo'rlik qilish, hayz davrining har kunida - tana, hissiyotlar, va garmonlardagi tabiiy o'zgarishlarni kuzatish va tushunish kabi muhim bilimlar beriladi. Turmush qurishdan avval o'z tanangizni, ayollik tabiatingizni chuqurroq anglab, uning ritmiga mos yashashni o'rganish - bo'lajak sog'lom homiladorlikka tayyorgarlik bo'lishi bilan birga, kelajakda dunyoga keladigan qiz farzandingiz tarbiyasida ham bebaho poydevor bo'lib xizmat qiladi. Bu - nafaqat bugungi salomatligingizga, balki ertangi avlodingizga ham qaratilgan eng dono sarmoyalardan biridir.`,
     },
   ];
@@ -81,9 +81,9 @@ const FAQAccordion = () => {
             {openItems.includes(index) && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
+                animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
                 <div className="px-6 pb-6 pt-2">
@@ -103,9 +103,9 @@ export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: '#courses', label: 'Kurslar' },
-    { href: '#pricing', label: 'Tariflar' },
-    { href: '#about', label: 'Biz haqimizda' },
+    { href: "#courses", label: "Kurslar" },
+    { href: "#pricing", label: "Tariflar" },
+    { href: "#about", label: "Biz haqimizda" },
   ];
 
   return (
@@ -139,14 +139,20 @@ export default function HomePage() {
             <div className="hidden lg:flex items-center space-x-4">
               {user ? (
                 <Link href="/dashboard">
-                  <Button variant="outline" className="border-red-300 text-red-800 hover:bg-red-50">
+                  <Button
+                    variant="outline"
+                    className="border-red-300 text-red-800 hover:bg-red-50"
+                  >
                     {user.first_name}
                   </Button>
                 </Link>
               ) : (
                 <>
                   <Link href="/login">
-                    <Button variant="ghost" className="text-gray-600 hover:text-red-800">
+                    <Button
+                      variant="ghost"
+                      className="text-gray-600 hover:text-red-800"
+                    >
                       Kirish
                     </Button>
                   </Link>
@@ -274,7 +280,7 @@ export default function HomePage() {
               Gormonal vositalarsiz, o'z tanangizni tinglash orqali homiladorlikni
               rejalashtiring yoki oldini oling. Ilmiy asoslangan metodlar bilan
               o'z salomatligingizni nazorat qiling.
-            </motion.h1>
+            </motion.p>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -461,7 +467,208 @@ export default function HomePage() {
               </p>
             </motion.div>
             <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
-              {/* Pricing cards would go here, similar to pricing/page.tsx */}
+              {/* STANDART */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="h-full"
+              >
+                <Card className="border-gray-200 h-full flex flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl">STANDART</CardTitle>
+                    <div className="text-2xl font-bold text-gray-900 mb-1">
+                      2.730.000 UZS
+                    </div>
+                    <div className="text-lg text-gray-600 mb-2">210$</div>
+                  </CardHeader>
+                  <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">STM darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Ayollik Fiqhi darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Bonus dars "Yoni-steam"</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          3 oy davomida kurs materiallariga kirish
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          1 to'liq hayz xaritasi kuzatuvi
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Foydalanuvchi Sertifikati (o'rgatish huquqisiz)
+                        </span>
+                      </li>
+                    </ul>
+                    <Link href="/register" className="block pt-4">
+                      <Button className="w-full bg-red-800 hover:bg-red-900">
+                        Sotib olish
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* OPTIMAL */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="h-full"
+              >
+                <Card className="border-red-500 relative h-full flex flex-col shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-red-800">
+                    Mashhur
+                  </Badge>
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl text-red-900">
+                      OPTIMAL
+                    </CardTitle>
+                    <div className="text-2xl font-bold text-red-800 mb-1">
+                      3.510.000 UZS
+                    </div>
+                    <div className="text-lg text-gray-600 mb-2">270$</div>
+                  </CardHeader>
+                  <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">STM darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Ayollik Fiqhi darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Bonus dars "Yoni-steam"</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Juftlar munosabati bo'yicha dars
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          4 oy davomida kurs materiallariga kirish
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          1 to'liq hayz xaritasi kuzatuvi
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Foydalanuvchi Sertifikati (o'rgatish huquqisiz)
+                        </span>
+                      </li>
+                    </ul>
+                    <Link href="/register" className="block pt-4">
+                      <Button className="w-full bg-red-800 hover:bg-red-900">
+                        Sotib olish
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* VIP */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="h-full"
+              >
+                <Card className="border-red-300 h-full flex flex-col hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl text-red-900">VIP</CardTitle>
+                    <div className="text-2xl font-bold text-red-800 mb-1">
+                      4.550.000 UZS
+                    </div>
+                    <div className="text-lg text-gray-600 mb-2">350$</div>
+                  </CardHeader>
+                  <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">STM darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Ayollik Fiqhi darslari</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">Bonus dars "Yoni-steam"</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Juftlar munosabati bo'yicha dars
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Sog'lom Ayollik Sirlari darsi
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          6 oy davomida kurs materiallariga kirish
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          3 to'liq hayz xaritasi kuzatuvi
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Foydalanuvchi Sertifikati (o'rgatish huquqisiz)
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm font-semibold text-red-600">
+                          SOVG'A - ko'p martalik prokladka + maxsus termometr
+                        </span>
+                      </li>
+                    </ul>
+                    <Link href="/register" className="block pt-4">
+                      <Button className="w-full bg-red-800 hover:bg-red-900">
+                        Sotib olish
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
         </section>
