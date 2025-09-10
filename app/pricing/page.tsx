@@ -39,12 +39,12 @@ export default function PricingPage() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  href="/auth"
                   className="text-gray-600 hover:text-red-800"
                 >
                   Kirish
                 </Link>
-                <Link href="/register">
+                <Link href="/auth">
                   <Button className="bg-red-800 hover:bg-red-900">
                     Ro'yxatdan o'tish
                   </Button>

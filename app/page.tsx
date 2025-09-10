@@ -148,7 +148,7 @@ export default function HomePage() {
                 </Link>
               ) : (
                 <>
-                  <Link href="/login">
+                  <Link href="/auth">
                     <Button
                       variant="ghost"
                       className="text-gray-600 hover:text-red-800"
@@ -215,7 +215,7 @@ export default function HomePage() {
                     </Link>
                   ) : (
                     <>
-                      <Link href="/login">
+                      <Link href="/auth">
                         <Button
                           variant="ghost"
                           className="w-full text-gray-600 hover:text-red-800"

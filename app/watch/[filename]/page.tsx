@@ -20,7 +20,7 @@ export default function WatchPage() {
   useEffect(() => {
     if (userLoading) return;
     if (!user) {
-      router.push("/login");
+      router.push("/auth");
       return;
     }
 

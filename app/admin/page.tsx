@@ -114,7 +114,7 @@ export default function AdminPage() {
       return;
     }
     if (user === null) {
-      router.push("/login");
+      router.push("/auth");
       return;
     }
     if (user?.role !== Role.ADMIN) {
