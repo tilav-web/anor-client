@@ -156,7 +156,7 @@ export default function HomePage() {
                       Kirish
                     </Button>
                   </Link>
-                  <Link href="/register">
+                  <Link href="/auth">
                     <Button className="bg-red-600 hover:bg-red-700 text-white">
                       Ro'yxatdan o'tish
                     </Button>
@@ -223,7 +223,7 @@ export default function HomePage() {
                           Kirish
                         </Button>
                       </Link>
-                      <Link href="/register">
+                      <Link href="/auth">
                         <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
                           Ro'yxatdan o'tish
                         </Button>
@@ -515,7 +515,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <Link href="/register" className="block pt-4">
+                    <Link href="/auth" className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
@@ -583,7 +583,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <Link href="/register" className="block pt-4">
+                    <Link href="/auth" className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
@@ -658,7 +658,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <Link href="/register" className="block pt-4">
+                    <Link href="/auth" className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
@@ -690,7 +690,7 @@ export default function HomePage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/register">
+                <Link href="/auth">
                   <Button
                     size="lg"
                     variant="secondary"

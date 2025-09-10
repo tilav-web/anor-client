@@ -122,7 +122,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href="/register" className="block pt-4">
+                  <Link href="/auth" className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>
@@ -187,7 +187,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href="/register" className="block pt-4">
+                  <Link href="/auth" className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>
@@ -259,7 +259,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href="/register" className="block pt-4">
+                  <Link href="/auth" className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>
@@ -288,7 +288,7 @@ export default function PricingPage() {
               ham qo'shiling!
             </p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/register">
+              <Link href="/auth">
                 <Button
                   size="lg"
                   className="bg-red-800 hover:bg-red-900 text-lg px-8 py-3"
