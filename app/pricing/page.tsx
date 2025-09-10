@@ -90,7 +90,6 @@ export default function PricingPage() {
                   <div className="text-2xl font-bold text-gray-900 mb-1">
                     2.730.000 UZS
                   </div>
-                  <div className="text-lg text-gray-600 mb-2">210$</div>
                 </CardHeader>
                 <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
                   <ul className="space-y-2">
@@ -150,7 +149,6 @@ export default function PricingPage() {
                   <div className="text-2xl font-bold text-red-800 mb-1">
                     3.510.000 UZS
                   </div>
-                  <div className="text-lg text-gray-600 mb-2">270$</div>
                 </CardHeader>
                 <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
                   <ul className="space-y-2">
