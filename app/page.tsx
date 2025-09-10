@@ -247,10 +247,10 @@ export default function HomePage() {
             loop
             muted
             playsInline
-            className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+            className="absolute top-0 left-0 w-full h-full object-cover z-10"
           ></video>
-          <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
-          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
+          <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-20"></div>
+          <div className="relative z-30 flex flex-col items-center justify-center h-full text-center text-white px-4">
             <motion.div
               className="mb-4"
               initial={{ opacity: 0, y: 20 }}
