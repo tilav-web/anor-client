@@ -46,7 +46,8 @@ const FAQAccordion = () => {
       answer: `Albatta. Kuzatuvlarga asoslanib, barcha ayollar tug'ruqdan keyingi 3 haftada fertil (unumdor) bo'lmasliklari aniqlangan. Undan keyingi davrda, emizishning to'liq yoki aralash ekanligiga qarab, STM qoidalari bo'yicha kuzatuvni boshlashingiz mumkin.`,
     },
     {
-      question: "Hali turmushga chiqmagan qiz bolaman. Kurs men uchun foydali bo'ladimi?",
+      question:
+        "Hali turmushga chiqmagan qiz bolaman. Kurs men uchun foydali bo'ladimi?",
       answer: `Bu kursda har bir qiz va ayol bilishi shart bo'lgan hayz ilmi, o'ziga g'amxo'rlik qilish, hayz davrining har kunida - tana, hissiyotlar, va garmonlardagi tabiiy o'zgarishlarni kuzatish va tushunish kabi muhim bilimlar beriladi. Turmush qurishdan avval o'z tanangizni, ayollik tabiatingizni chuqurroq anglab, uning ritmiga mos yashashni o'rganish - bo'lajak sog'lom homiladorlikka tayyorgarlik bo'lishi bilan birga, kelajakda dunyoga keladigan qiz farzandingiz tarbiyasida ham bebaho poydevor bo'lib xizmat qiladi. Bu - nafaqat bugungi salomatligingizga, balki ertangi avlodingizga ham qaratilgan eng dono sarmoyalardan biridir.`,
     },
   ];
@@ -116,9 +117,8 @@ export default function HomePage() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
-              <div className="flex items-center space-x-2">
-                <Heart className="h-8 w-8 text-red-600" />
-                <h1 className="text-2xl font-bold text-red-900">Uyg'unlik</h1>
+              <div className="flex items-center w-12 h-12">
+                <img src="/images/logo-main.png" alt="" />
               </div>
             </Link>
 
@@ -277,9 +277,9 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              Gormonal vositalarsiz, o'z tanangizni tinglash orqali homiladorlikni
-              rejalashtiring yoki oldini oling. Ilmiy asoslangan metodlar bilan
-              o'z salomatligingizni nazorat qiling.
+              Gormonal vositalarsiz, o'z tanangizni tinglash orqali
+              homiladorlikni rejalashtiring yoki oldini oling. Ilmiy asoslangan
+              metodlar bilan o'z salomatligingizni nazorat qiling.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -365,8 +365,8 @@ export default function HomePage() {
                 Kurs tarkibi
               </h2>
               <p className="max-w-3xl mx-auto text-lg text-gray-600">
-                Har bir modul sizga yangi bilimlar berish va amaliy ko'nikmalarni
-                shakllantirish uchun mo'ljallangan.
+                Har bir modul sizga yangi bilimlar berish va amaliy
+                ko'nikmalarni shakllantirish uchun mo'ljallangan.
               </p>
             </motion.div>
             <div className="grid md:grid-cols-2 gap-8">
@@ -720,7 +720,9 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-gray-200">Tezkor havolalar</h4>
+              <h4 className="font-semibold mb-4 text-gray-200">
+                Tezkor havolalar
+              </h4>
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <Link
