@@ -241,7 +241,7 @@ export default function HomePage() {
         {/* --- Hero Section --- */}
         <section className="relative h-[90vh] min-h-[600px] max-h-[800px] w-full overflow-hidden">
           <video
-            src="/client/public/women.mp4"
+            src="/women.mp4"
             poster="/images/header.jpg" // Fallback image
             autoPlay
             loop
@@ -252,16 +252,16 @@ export default function HomePage() {
           <div className="absolute top-0 left-0 w-full h-full bg-black/50"></div>
           <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">
             <motion.div
+              className="mb-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <Badge
-                variant="secondary"
-                className="bg-white/20 backdrop-blur-sm text-white border-white/30 mb-6"
-              >
-                Ayollik tabiatingiz bilan uyg'unlik
-              </Badge>
+              <img
+                src="/images/logo-decorated.png"
+                alt="Uyg'unlik Logo"
+                className="h-24 md:h-28"
+              />
             </motion.div>
             <motion.h1
               className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight"
