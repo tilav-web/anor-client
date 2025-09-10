@@ -13,9 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Settings, BookOpen, PlayCircle } from "lucide-react";
@@ -33,6 +30,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 const profileFormSchema = z.object({
   first_name: z
@@ -42,7 +41,6 @@ const profileFormSchema = z.object({
     .string()
     .min(2, { message: "Familiya kamida 2 harfdan iborat bo'lishi kerak." }),
   email: z.string().email({ message: "Noto'g'ri email format." }),
-  phone: z.string().min(9, { message: "Noto'g'ri telefon raqam format." }),
   password: z.string().optional(),
 });
 
@@ -60,7 +58,6 @@ export default function DashboardPage() {
       first_name: "",
       last_name: "",
       email: "",
-      phone: "",
       password: "",
     },
   });
@@ -71,21 +68,19 @@ export default function DashboardPage() {
       return;
     }
     if (user === null) {
-      router.push("/login");
+      router.push("/auth");
       return;
     }
     if (user.role === Role.ADMIN) {
       router.push("/admin");
       return;
     }
-    
-    // Populate form with user data
+
     if (user) {
       form.reset({
         first_name: user.first_name || "",
         last_name: user.last_name || "",
         email: user.email || "",
-        phone: user.phone || "",
       });
     }
 
@@ -94,23 +89,22 @@ export default function DashboardPage() {
 
   async function onSubmit(values: ProfileFormValues) {
     try {
-      // Filter out empty password field
       const updateData: Partial<ProfileFormValues> = { ...values };
-      if (!updateData.password) {
+      if (!updateData.password || updateData.password === "") {
         delete updateData.password;
       }
 
       const updatedUser = await UserService.updateProfile(updateData);
       setUser(updatedUser);
-      toast({
-        title: "Muvaffaqiyatli!",
-        description: "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",
+      toast({ 
+        title: "Muvaffaqiyatli!", 
+        description: "Ma'lumotlaringiz yangilandi."
       });
-      form.reset({ ...form.getValues(), password: "" }); // Clear password field
+      form.reset({ ...form.getValues(), password: "" });
     } catch (error) {
       toast({
         title: "Xatolik!",
-        description: "Ma'lumotlarni o'zgartirishda xatolik yuz berdi.",
+        description: "Ma'lumotlarni yangilashda xatolik yuz berdi.",
         variant: "destructive",
       });
     }
@@ -126,7 +120,7 @@ export default function DashboardPage() {
 
   const userInfo = {
     name: `${user.first_name} ${user.last_name}`,
-    plan: "Optimal", // Mock data, as it's not in the User schema
+    plan: "Optimal",
   };
 
   return (
@@ -179,7 +173,7 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="flex-grow">
                       <div className="space-y-2">
-                        <Progress value={30} className="w-full" /> 
+                        <Progress value={30} className="w-full" />
                         <p className="text-sm text-gray-600">30% tugallandi</p>
                       </div>
                     </CardContent>
@@ -205,9 +199,7 @@ export default function DashboardPage() {
                 </p>
                 <div className="mt-6">
                   <Button asChild className="bg-red-600 hover:bg-red-700">
-                    <Link href="/pricing">
-                      Kurslarni ko'rish
-                    </Link>
+                    <Link href="/pricing">Kurslarni ko'rish</Link>
                   </Button>
                 </div>
               </div>
@@ -274,22 +266,6 @@ export default function DashboardPage() {
                       />
                       <FormField
                         control={form.control}
-                        name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Telefon</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Telefon raqamingiz"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
                         name="password"
                         render={({ field }) => (
                           <FormItem>
@@ -311,7 +287,9 @@ export default function DashboardPage() {
                       className="bg-red-600 hover:bg-red-700"
                       disabled={form.formState.isSubmitting}
                     >
-                      {form.formState.isSubmitting ? "Saqlanmoqda..." : "Saqlash"}
+                      {form.formState.isSubmitting
+                        ? "Saqlanmoqda..."
+                        : "Saqlash"}
                     </Button>
                   </form>
                 </Form>
@@ -329,11 +307,11 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-center py-12">
-                   <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-                   <h3 className="mt-2 text-lg font-medium text-gray-900">
+                  <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-lg font-medium text-gray-900">
                     To'lovlar tarixi bo'sh
                   </h3>
-                   <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-gray-500">
                     Siz hali hech qanday to'lov qilmagansiz.
                   </p>
                 </div>
