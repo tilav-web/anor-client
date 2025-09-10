@@ -260,7 +260,7 @@ export default function HomePage() {
               <img
                 src="/images/logo-decorated.png"
                 alt="Uyg'unlik Logo"
-                className="h-24 md:h-28"
+                className="h-24 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
               />
             </motion.div>
             <motion.h1
