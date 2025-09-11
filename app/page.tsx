@@ -250,11 +250,10 @@ export default function HomePage() {
                 <img
                   src="/images/logo-decorated.png"
                   alt="Uyg'unlik Logo"
-                  className="h-20 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                  className="h-16 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
                 />
-              </motion.div>
-              <motion.h1
-                className="font-dancing text-2xl sm:text-3xl md:text-5xl"
+              </motion.div>              <motion.h1
+                className="font-dancing text-xl sm:text-3xl md:text-5xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
@@ -262,7 +261,7 @@ export default function HomePage() {
                 Ayollik tabiatingiz bilan hamohanglikda yashang
               </motion.h1>
               <motion.p
-                className="mx-auto text-base sm:text-lg font-bold md:text-xl text-red-900 mb-3"
+                className="mx-auto text-sm sm:text-lg font-bold md:text-xl text-red-900 mb-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -284,7 +283,7 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
                 className="mb-6"
               >
-                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-2">
+                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-1">
                   <li className="font-bold">Start:</li>
                   <li>Avgust, 2025</li>
                   <li className="font-bold">Davomiyligi:</li>
