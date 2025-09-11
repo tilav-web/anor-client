@@ -110,7 +110,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-red-50 text-gray-800">
+    <div className="min-h-screen bg-[#FEFBEE] text-gray-800">
       {/* --- Header --- */}
       <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-red-100/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -118,7 +118,7 @@ export default function HomePage() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <div className="flex items-center w-12 h-12">
-                <img src="/images/logo-main.png" alt="" />
+                <img src="/images/logo-main.png" alt="logo" />
               </div>
             </Link>
 
@@ -239,65 +239,69 @@ export default function HomePage() {
 
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative h-screen w-full overflow-hidden">
-          <video
-            src="/women.mp4"
-            poster="/images/header.jpg" // Fallback image
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute top-0 left-0 w-full h-full object-cover z-10"
-          ></video>
-          <div className="absolute top-0 left-0 w-full h-full bg-black/50 z-20"></div>
-          <div className="relative z-30 flex flex-col items-center justify-center h-full text-center text-white px-4">
-            <motion.div
-              className="mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <img
-                src="/images/logo-decorated.png"
-                alt="Uyg'unlik Logo"
-                className="h-20 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
-              />
-            </motion.div>
-            <motion.h1
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6 leading-tight tracking-tight"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              Tabiiy usulda sog'lom hayot
-            </motion.h1>
-            <motion.p
-              className="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-white/90 mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              Gormonal vositalarsiz, o'z tanangizni tinglash orqali
-              homiladorlikni rejalashtiring yoki oldini oling. Ilmiy asoslangan
-              metodlar bilan o'z salomatligingizni nazorat qiling.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link href="#pricing">
-                <Button
-                  size="lg"
-                  className="bg-white text-red-800 hover:bg-red-50 text-lg px-10 py-6 rounded-full font-bold shadow-lg"
-                >
-                  Kursga yozilish
-                  <ArrowRight className="ml-3 h-5 w-5" />
-                </Button>
-              </Link>
-            </motion.div>
+        <section className="relative w-full overflow-hidden">
+          <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
+            <div className="flex flex-col items-center justify-center h-full text-center text-red-900 pt-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                <img
+                  src="/images/logo-decorated.png"
+                  alt="Uyg'unlik Logo"
+                  className="h-20 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                />
+              </motion.div>
+              <motion.h1
+                className="font-dancing text-2xl sm:text-3xl md:text-5xl"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Ayollik tabiatingiz bilan hamohanglikda yashang
+              </motion.h1>
+              <motion.p
+                className="mx-auto text-base sm:text-lg font-bold md:text-xl text-red-900 mb-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                Tabiiy usul bilan homiladorlikni rejalashtiring yoki oldini
+                oling
+              </motion.p>
+              <motion.p
+                className="mx-auto border-t border-b border-red-900 max-w-[120px] w-full mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              ></motion.p>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="mb-6"
+              >
+                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-2">
+                  <li className="font-bold">Start:</li>
+                  <li>Avgust, 2025</li>
+                  <li className="font-bold">Davomiyligi:</li>
+                  <li>8 hafta</li>
+                </ul>
+              </motion.div>
+            </div>
+            <video
+              src="/women.mp4"
+              poster="/images/header.jpg" // Fallback image
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full md:h-full h-[600px] sm:h-[700px] object-cover z-10"
+            ></video>
+            <div className="absolute z-10 bottom-0 h-1/2 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
           </div>
         </section>
 

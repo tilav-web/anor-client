@@ -9,6 +9,13 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "@/components/session-provider";
 import { useEffect } from "react";
 import { useUserStore } from "@/store/user.store";
+import { Dancing_Script } from "next/font/google";
+
+const dancing = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-dancing",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -24,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistSans.variable} ${GeistMono.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable} ${dancing.variable}`}
       suppressHydrationWarning
     >
       <body>
