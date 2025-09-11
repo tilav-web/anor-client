@@ -539,7 +539,7 @@ export default function HomePage() {
                   <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-red-800">
                     Mashhur
                   </Badge>
-                  <CardHeader className="text-center">
+                  <CardContent className="text-center">
                     <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning OPTIMAL kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
