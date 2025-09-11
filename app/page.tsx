@@ -518,7 +518,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <Link href="/auth" className="block pt-4">
+                    <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning STANDART kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
@@ -540,53 +540,7 @@ export default function HomePage() {
                     Mashhur
                   </Badge>
                   <CardHeader className="text-center">
-                    <CardTitle className="text-xl text-red-900">
-                      OPTIMAL
-                    </CardTitle>
-                    <div className="text-2xl font-bold text-red-800 mb-1">
-                      3.510.000 UZS
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-4 flex-grow flex flex-col justify-between">
-                    <ul className="space-y-2">
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">STM darslari</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">Ayollik Fiqhi darslari</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">Bonus dars "Yoni-steam"</span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Juftlar munosabati bo'yicha dars
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          4 oy davomida kurs materiallariga kirish
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          1 to'liq hayz xaritasi kuzatuvi
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-green-600 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Foydalanuvchi Sertifikati (o'rgatish huquqisiz)
-                        </span>
-                      </li>
-                    </ul>
-                    <Link href="/auth" className="block pt-4">
+                    <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning OPTIMAL kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
@@ -661,7 +615,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <Link href="/auth" className="block pt-4">
+                    <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning VIP kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                       <Button className="w-full bg-red-800 hover:bg-red-900">
                         Sotib olish
                       </Button>
