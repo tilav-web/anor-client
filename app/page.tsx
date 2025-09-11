@@ -301,7 +301,7 @@ export default function HomePage() {
               playsInline
               className="w-full md:h-full h-[600px] sm:h-[700px] object-cover z-10"
             ></video>
-            <div className="absolute z-10 bottom-0 h-1/2 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
+            <div className="absolute z-10 bottom-0 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
           </div>
         </section>
 
