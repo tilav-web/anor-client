@@ -24,6 +24,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useUserStore } from "@/store/user.store";
 
 // FAQ Accordion Component
@@ -222,23 +230,29 @@ export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navLinks = [
+    { href: "/#main", label: "Bosh sahifa" },
     { href: "#courses", label: "Kurslar" },
+    { href: "#author", label: "Muallif haqida" },
+    { href: "#faq", label: "FAQ" },
     { href: "#pricing", label: "Tariflar" },
-    { href: "#about", label: "Biz haqimizda" },
+    { href: "#reviews", label: "Sharhlar" },
   ];
 
   return (
     <div className="min-h-screen bg-[#FEFBEE] text-gray-800">
       {/* --- Header --- */}
-      <div className="container absolute mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 z-50">
-        <div className="flex items-center justify-between py-2">
+      <div
+        id="main"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0"
+      >
+        <div className="flex items-center lg:justify-end py-2">
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-base font-medium text-gray-600 hover:text-red-800 transition-colors duration-300"
+                className="text-xl font-medium text-gray-600 hover:text-red-800 transition-colors duration-300"
               >
                 {link.label}
               </Link>
@@ -246,7 +260,7 @@ export default function HomePage() {
           </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4 ml-10">
             {user ? (
               <Link href="/dashboard">
                 <Button
@@ -258,94 +272,47 @@ export default function HomePage() {
               </Link>
             ) : (
               <>
-                <Link href="/auth">
-                  <Button
-                    variant="ghost"
-                    className="text-gray-600 hover:text-red-800"
-                  >
-                    Kirish
-                  </Button>
-                </Link>
-                <Link href="/auth">
-                  <Button className="bg-red-600 hover:bg-red-700 text-white">
-                    Ro'yxatdan o'tish
-                  </Button>
-                </Link>
+                <Link className="text-xl text-red-900 transition-all" href="/auth">Kirish</Link>
               </>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 rounded-full text-white bg-red-800 hover:bg-red-100/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500"
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <SheetTrigger asChild>
+              <button className="lg:hidden p-2 rounded-full text-white bg-red-800 hover:bg-red-100/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500">
+                <span className="sr-only">Open menu</span>
+                {isMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </SheetTrigger>
+            <SheetContent
+              side="right"
+              className="bg-red-900 text-white border-none p-8"
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+              <SheetHeader className="mb-8">
+                <SheetTitle className="text-white text-2xl font-bold text-left"></SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-3">
+                {navLinks.map((link) => (
+                  <SheetClose asChild key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-2xl hover:underline underline-offset-4"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  </SheetClose>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden bg-white/95 backdrop-blur-sm shadow-lg border-t border-red-100/50"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-800 hover:bg-red-50/50"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-            <div className="pt-4 pb-3 border-t border-red-100/50">
-              <div className="px-5 space-y-3">
-                {user ? (
-                  <Link href="/dashboard">
-                    <Button
-                      variant="outline"
-                      className="w-full border-red-300 text-red-800 hover:bg-red-50"
-                    >
-                      {user.first_name}
-                    </Button>
-                  </Link>
-                ) : (
-                  <>
-                    <Link href="/auth">
-                      <Button
-                        variant="ghost"
-                        className="w-full text-gray-600 hover:text-red-800"
-                      >
-                        Kirish
-                      </Button>
-                    </Link>
-                    <Link href="/auth">
-                      <Button className="w-full bg-red-600 hover:bg-red-700 text-white">
-                        Ro'yxatdan o'tish
-                      </Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <main>
         {/* --- Hero Section --- */}
         <section className="relative w-full overflow-hidden">
@@ -410,6 +377,12 @@ export default function HomePage() {
               playsInline
               className="w-full md:h-full h-[600px] sm:h-[700px] object-cover z-10"
             ></video>
+            <div className="absolute h-44 w-44 border rounded-full bottom-40 z-50 flex items-center justify-center text-white">
+              <p className="text-xl">
+                ISHTIROK <br /> ETAMAN
+              </p>
+              <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
+            </div>
             <div className="absolute z-10 bottom-0 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
           </div>
         </section>
@@ -1129,7 +1102,7 @@ export default function HomePage() {
         </section>
 
         {/* Kurs Muallifi */}
-        <section className="py-16 px-4 bg-white">
+        <section id="author" className="py-16 px-4 bg-white">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -1281,7 +1254,7 @@ export default function HomePage() {
         </section>
 
         {/* Sharhlar */}
-        <section className="py-16 px-4 bg-red-50">
+        <section id="reviews" className="py-16 px-4 bg-red-50">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
