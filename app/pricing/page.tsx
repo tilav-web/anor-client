@@ -122,7 +122,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning STANDART kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
+                  <Link href={`${user ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning STANDART kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>
@@ -187,7 +187,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning OPTIMAL kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
+                  <Link href={`${user ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning OPTIMAL kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>
@@ -259,7 +259,7 @@ export default function PricingPage() {
                       </span>
                     </li>
                   </ul>
-                  <Link href={`${user ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning VIP kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
+                  <Link href={`${user ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.first_name} sizning VIP kursingizni sotib olmoqchiman.` : '/auth'}`} className="block pt-4">
                     <Button className="w-full bg-red-800 hover:bg-red-900">
                       Sotib olish
                     </Button>

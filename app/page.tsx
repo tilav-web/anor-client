@@ -79,7 +79,7 @@ const FAQAccordion = () => {
         >
           <button
             onClick={() => toggleItem(index)}
-            className="w-full p-6 text-left flex items-center justify-between hover:bg-red-50/50 transition-colors duration-300"
+            className="w-full p-6 text-left flex items-center justify-between hover/50 transition-colors duration-300"
           >
             <h3 className="text-lg font-semibold text-red-900 pr-4">
               {item.question}
@@ -188,10 +188,12 @@ const ReviewsCarousel = () => {
             <div key={index} className="w-full flex-shrink-0 px-4">
               <div className="bg-white p-8 rounded-lg shadow-md border border-red-100 text-center">
                 <div className="flex items-center justify-center mb-6">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full mr-4 flex items-center justify-center">
-                    <span className="text-gray-600 font-semibold text-xl">
-                      {review.initial}
-                    </span>
+                  <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4 flex items-center justify-center">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={`/images/sharh/${index + 1}.jpg`}
+                      alt=""
+                    />
                   </div>
                   <div>
                     <h4 className="font-semibold text-red-800 text-lg">
@@ -265,7 +267,7 @@ export default function HomePage() {
               <Link href="/dashboard">
                 <Button
                   variant="outline"
-                  className="border-red-300 text-red-800 hover:bg-red-50"
+                  className="border-red-300 text-red-800 hover"
                 >
                   {user.first_name}
                 </Button>
@@ -385,7 +387,7 @@ export default function HomePage() {
             <Link
               href={`${
                 user
-                  ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning kursingizda ishtirok etmoqchiman.`
+                  ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning kursingizda ishtirok etmoqchiman.`
                   : "/auth"
               }`}
               className="absolute h-44 w-44 border rounded-full bottom-40 z-50 flex items-center justify-center text-white"
@@ -400,7 +402,7 @@ export default function HomePage() {
         </section>
 
         {/* kurslar kimlar uchun */}
-        <section className="py-16 px-4 bg-white">
+        <section className="py-16 px-4">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -580,7 +582,7 @@ export default function HomePage() {
         </section>
 
         {/* --- Features Section --- */}
-        <section id="about" className="py-20 sm:py-28">
+        {/* <section id="about" className="py-20 sm:py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="text-center mb-16"
@@ -627,10 +629,10 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* --- Course Content Section --- */}
-        <section id="courses" className="py-16 px-4 bg-red-50">
+        <section id="courses" className="py-16 px-4">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -655,7 +657,7 @@ export default function HomePage() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
-                          src="/placeholder-user.jpg"
+                          src="/images/muallif.jpg"
                           alt="Nozima Khamraeva"
                           className="w-full h-full object-cover"
                         />
@@ -717,7 +719,7 @@ export default function HomePage() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
-                          src="/placeholder-user.jpg"
+                          src="/images/module-2.jpg"
                           alt="Sumayya Hanafi"
                           className="w-full h-full object-cover"
                         />
@@ -784,7 +786,7 @@ export default function HomePage() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
-                          src="/placeholder-user.jpg"
+                          src="/images/module-3.jpg"
                           alt="Ummu Umayr"
                           className="w-full h-full object-cover"
                         />
@@ -853,7 +855,7 @@ export default function HomePage() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
-                          src="/placeholder-user.jpg"
+                          src="/images/module-4.jpg"
                           alt="Sohiba Abdalniyozova"
                           className="w-full h-full object-cover"
                         />
@@ -910,7 +912,7 @@ export default function HomePage() {
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
                         <img
-                          src="/placeholder-user.jpg"
+                          src="/images/module-5.jpg"
                           alt="Ruvayha"
                           className="w-full h-full object-cover"
                         />
@@ -951,7 +953,7 @@ export default function HomePage() {
         </section>
 
         {/* Ilmiy Asoslangan Samaradorlik */}
-        <section className="py-16 px-4 bg-red-50">
+        <section className="py-16 px-4">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -1094,7 +1096,7 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-4 text-center py-2 border-t bg-red-50 rounded">
+                      <div className="grid grid-cols-3 gap-4 text-center py-2 border-t rounded">
                         <div className="text-sm font-semibold">
                           Simptotermal usul
                         </div>
@@ -1114,7 +1116,7 @@ export default function HomePage() {
         </section>
 
         {/* Kurs Muallifi */}
-        <section id="author" className="py-16 px-4 bg-white">
+        <section id="author" className="py-16 px-4">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -1138,7 +1140,7 @@ export default function HomePage() {
                 <div className="mb-8">
                   <div className="w-48 h-48 mx-auto md:mx-0 rounded-full overflow-hidden bg-gray-200 mb-6">
                     <img
-                      src="/placeholder-user.jpg"
+                      src="/images/muallif.jpg"
                       alt="Nozima Khamraeva"
                       className="w-full h-full object-cover"
                     />
@@ -1175,70 +1177,9 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="flex justify-center"
               >
-                <Card className="border-red-200 bg-white shadow-lg max-w-sm">
-                  <CardContent className="p-6">
-                    <div className="text-center">
-                      {/* Sertifikat header */}
-                      <div className="mb-6">
-                        <div className="text-blue-600 font-bold text-lg mb-2">
-                          NFP
-                        </div>
-                        <div className="text-sm text-gray-600 mb-4">
-                          Natural Family Planning Teachers' Association
-                        </div>
-                      </div>
-
-                      {/* Sertifikat sarlavhasi */}
-                      <h3 className="text-xl font-bold text-gray-800 mb-6">
-                        Certificate of Theory
-                      </h3>
-
-                      {/* Sertifikat egasi */}
-                      <div className="mb-6">
-                        <p className="text-sm text-gray-600 mb-2">
-                          This is to certify that
-                        </p>
-                        <p className="text-lg font-bold text-gray-800">
-                          Nozima Khamraeva
-                        </p>
-                      </div>
-
-                      {/* Sertifikat mazmuni */}
-                      <div className="mb-6 text-sm text-gray-700 leading-relaxed">
-                        <p>
-                          has passed the examination in Theoretical Knowledge
-                          and Understanding of Natural Family Planning on the
-                          2024 Distance Learning Teacher Training Course
-                        </p>
-                      </div>
-
-                      {/* Imzo */}
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-600 mb-2">Signed</p>
-                        <div className="border-b border-gray-300 mb-2"></div>
-                        <p className="text-sm text-gray-600">
-                          Olive Duddy MB CHB MRCGP
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          C. Burgess (Tutor)
-                        </p>
-                      </div>
-
-                      {/* Sana */}
-                      <div className="mb-4">
-                        <p className="text-sm text-gray-600">
-                          Date: 31st May 2024
-                        </p>
-                      </div>
-
-                      {/* Pastki logotip */}
-                      <div className="text-xs text-gray-500">
-                        <p>The NFPtA is also a member of the</p>
-                        <p>INSTITUT EUROPÉEN D'EDUCATION FAMILIALE</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="border-red-200 bg-white shadow-lg max-w-sm">
+                  <img className="h-full w-full" src="/nfp.jpg" alt="" />
+                </div>
               </motion.div>
             </div>
           </div>
@@ -1266,7 +1207,7 @@ export default function HomePage() {
         </section>
 
         {/* Sharhlar */}
-        <section id="reviews" className="py-16 px-4 bg-red-50">
+        <section id="reviews" className="py-16 px-4">
           <div className="container mx-auto">
             <motion.h2
               className="text-3xl font-bold text-center mb-12 text-red-900"
@@ -1283,7 +1224,7 @@ export default function HomePage() {
         </section>
 
         {/* --- Pricing Section --- */}
-        <section id="pricing" className="py-20 sm:py-28 bg-white">
+        <section id="pricing" className="py-20 sm:py-28">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               className="text-center mb-16"
@@ -1352,7 +1293,7 @@ export default function HomePage() {
                     <Link
                       href={`${
                         user
-                          ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning STANDART kursingizni sotib olmoqchiman.`
+                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning STANDART kursingizni sotib olmoqchiman.`
                           : "/auth"
                       }`}
                       className="block pt-4"
@@ -1427,7 +1368,7 @@ export default function HomePage() {
                     <Link
                       href={`${
                         user
-                          ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning OPTIMAL kursingizni sotib olmoqchiman.`
+                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning OPTIMAL kursingizni sotib olmoqchiman.`
                           : "/auth"
                       }`}
                       className="block pt-4"
@@ -1509,7 +1450,7 @@ export default function HomePage() {
                     <Link
                       href={`${
                         user
-                          ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning VIP kursingizni sotib olmoqchiman.`
+                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning VIP kursingizni sotib olmoqchiman.`
                           : "/auth"
                       }`}
                       className="block pt-4"
@@ -1526,7 +1467,7 @@ export default function HomePage() {
         </section>
 
         {/* --- CTA Section --- */}
-        <section className="py-20 sm:py-28 bg-red-800 text-white">
+        <section className="py-20 sm:py-28 bg-red-800">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -1549,7 +1490,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="secondary"
-                    className="bg-white text-red-800 hover:bg-red-50 text-lg px-8 py-6 rounded-full font-bold shadow-lg"
+                    className="bg-white text-red-800 hover text-lg px-8 py-6 rounded-full font-bold shadow-lg"
                   >
                     Hoziroq boshlash
                   </Button>
