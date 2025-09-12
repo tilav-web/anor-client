@@ -307,7 +307,6 @@ export default function HomePage() {
                     key={link.href}
                     onClick={() => {
                       window.location.href = link.href;
-                      setIsMenuOpen(false);
                     }}
                     className="text-2xl hover:underline underline-offset-4 text-left"
                   >
