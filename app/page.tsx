@@ -243,7 +243,7 @@ export default function HomePage() {
       {/* --- Header --- */}
       <div
         id="main"
-        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0"
+        className="container mx-auto px-4 sm:px-6 lg:px-8 top-0 left-0 absolute lg:static z-50"
       >
         <div className="flex items-center lg:justify-end py-2">
           {/* Desktop Navigation */}
@@ -326,7 +326,7 @@ export default function HomePage() {
                 <img
                   src="/images/logo-decorated.png"
                   alt="Uyg'unlik Logo"
-                  className="h-16 md:h-28 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                  className="h-14 md:h-24 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
                 />
               </motion.div>{" "}
               <motion.h1
