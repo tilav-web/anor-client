@@ -239,7 +239,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FEFBEE] text-gray-800">
+    <div className="min-h-screen bg-[#FEFBEE] text-gray-800 overflow-x-hidden">
       {/* --- Header --- */}
       <div
         id="main"
@@ -272,7 +272,12 @@ export default function HomePage() {
               </Link>
             ) : (
               <>
-                <Link className="text-xl text-red-900 transition-all" href="/auth">Kirish</Link>
+                <Link
+                  className="text-xl text-red-900 transition-all"
+                  href="/auth"
+                >
+                  Kirish
+                </Link>
               </>
             )}
           </div>
@@ -280,7 +285,7 @@ export default function HomePage() {
           {/* Mobile Menu Button */}
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <button className="lg:hidden p-2 rounded-full text-white bg-red-800 hover:bg-red-100/50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500">
+              <button className="lg:hidden p-2 rounded-full text-white bg-red-800">
                 <span className="sr-only">Open menu</span>
                 {isMenuOpen ? (
                   <X className="h-6 w-6" />
@@ -298,15 +303,16 @@ export default function HomePage() {
               </SheetHeader>
               <nav className="flex flex-col gap-3">
                 {navLinks.map((link) => (
-                  <SheetClose asChild key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-2xl hover:underline underline-offset-4"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  </SheetClose>
+                  <button
+                    key={link.href}
+                    onClick={() => {
+                      window.location.href = link.href;
+                      setIsMenuOpen(false);
+                    }}
+                    className="text-2xl hover:underline underline-offset-4 text-left"
+                  >
+                    {link.label}
+                  </button>
                 ))}
               </nav>
             </SheetContent>
@@ -315,7 +321,7 @@ export default function HomePage() {
       </div>
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative w-full overflow-hidden px-2">
+        <section className="relative w-full overflow-hidden">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
             <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
               <motion.div
@@ -377,13 +383,200 @@ export default function HomePage() {
               playsInline
               className="w-full md:h-full h-[600px] sm:h-[700px] object-cover z-10"
             ></video>
-            <div className="absolute h-44 w-44 border rounded-full bottom-40 z-50 flex items-center justify-center text-white">
+            <Link
+              href={`${
+                user
+                  ? `https://t.me/nozima_khamraeva?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning kursingizda ishtirok etmoqchiman.`
+                  : "/auth"
+              }`}
+              className="absolute h-44 w-44 border rounded-full bottom-40 z-50 flex items-center justify-center text-white"
+            >
               <p className="text-xl">
                 ISHTIROK <br /> ETAMAN
               </p>
               <span className="h-4 w-4 bg-white rounded-full right-4 bottom-4 absolute"></span>
-            </div>
+            </Link>
             <div className="absolute z-10 bottom-0 h-[300px] md:h-[400px] w-full left-0 bg-gradient-to-t from-red-900 from-20% to-transparent"></div>
+          </div>
+        </section>
+
+        {/* kurslar kimlar uchun */}
+        <section className="py-16 px-4 bg-white">
+          <div className="container mx-auto">
+            <motion.h2
+              className="text-3xl font-bold text-center mb-12 text-red-900"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              KURS KIMLAR UCHUN?
+            </motion.h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {/* 1. Doimiy xavotirda yashaydigan ayollar */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+              >
+                <Card className="border-red-200 h-full">
+                  <CardHeader>
+                    <CardTitle className="text-red-900 text-center">
+                      Doimiy xavotirda yashaydigan ayollar uchun
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center mb-4">
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <Users className="h-12 w-12 text-red-800" />
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">
+                      Tabiiy yo'llar bilan homiladorlikdan saqlanishni
+                      xohlaysiz, lekin zararli kontrasepsiya vositalaridan
+                      foydalanishdan qo'rqasizmi? Simptotermal metod (STM)
+                      yordamida:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          99.6% aniqlik bilan homiladorlikdan saqlanishni
+                          o'rganasiz.
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Tanangiz, kayfiyatingizdagi o'zgarishlar va hayz
+                          davringizni tushuna boshlaysiz
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Hayzingiz qachon boshlanishini aniq bilib, stressiz
+                          yashaysiz.
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Juftingiz bilan ishonchli va ochiq munosabatlar
+                          o'rnatishga erishasiz.
+                        </span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* 2. Homilador bo'lishni xohlayotgan ayollar */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                <Card className="border-red-200 h-full">
+                  <CardHeader>
+                    <CardTitle className="text-red-900 text-center">
+                      Homilador bo'lishni xohlayotgan, ammo qiyinchiliklarga
+                      duch kelayotgan ayollar uchun
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center mb-4">
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <Heart className="h-12 w-12 text-red-800" />
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">
+                      Agar sizga aniq bepushtlik tashxisi qo'yilmagan bo'lsa,
+                      STM orqali tabiiy usulda farzandli bo'lish imkoniyatini
+                      oshirishingiz mumkin:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Eng yuqori ehtimolli homiladorlik kunlarini
+                          aniqlaysiz.
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Homiladorlikning dastlabki 10 haftasida tanangiz
+                          resurslarini kuzatib borasiz.
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Tug'ish sanangizni homiladorlik yuzaga kelgan kundan
+                          boshlab hisoblay olasiz
+                        </span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* 3. Yaqinda ona bo'lgan ayollar */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
+                <Card className="border-red-200 h-full">
+                  <CardHeader>
+                    <CardTitle className="text-red-900 text-center">
+                      Yaqinda ona bo'lgan va darhol homilador bo'lishni
+                      istamaydigan ayollar uchun
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-center mb-4">
+                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
+                        <Award className="h-12 w-12 text-red-800" />
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mb-4">
+                      Ko'plab emizikli onalar «emizish homiladorlikdan saqlaydi»
+                      degan noto'g'ri tushunchaga ega. STM yordamida siz:
+                    </p>
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Hayzingiz hali tiklanmagan bo'lsa ham, 99.6% aniqlik
+                          bilan, keyingi homiladorlikni rejalashtira olasiz
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Tug'ruqdan keyingi birinchi ovulyatsiyangizni
+                          kuzatasiz.
+                        </span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
+                        <span className="text-sm">
+                          Organizmga zarar yetkazmaydigan va juftingiz bilan
+                          ishonchli munosabatda bo'lish imkonini beradigan
+                          tabiiy usuldan foydalanasiz.
+                        </span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
           </div>
         </section>
 
@@ -751,186 +944,6 @@ export default function HomePage() {
                         </li>
                       </ul>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-
-        {/* kurslar kimlar uchun */}
-        <section className="py-16 px-4 bg-white">
-          <div className="container mx-auto">
-            <motion.h2
-              className="text-3xl font-bold text-center mb-12 text-red-900"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              KURS KIMLAR UCHUN?
-            </motion.h2>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* 1. Doimiy xavotirda yashaydigan ayollar */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-              >
-                <Card className="border-red-200 h-full">
-                  <CardHeader>
-                    <CardTitle className="text-red-900 text-center">
-                      Doimiy xavotirda yashaydigan ayollar uchun
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Users className="h-12 w-12 text-red-800" />
-                      </div>
-                    </div>
-                    <p className="text-gray-600 mb-4">
-                      Tabiiy yo'llar bilan homiladorlikdan saqlanishni
-                      xohlaysiz, lekin zararli kontrasepsiya vositalaridan
-                      foydalanishdan qo'rqasizmi? Simptotermal metod (STM)
-                      yordamida:
-                    </p>
-                    <ul className="space-y-2">
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          99.6% aniqlik bilan homiladorlikdan saqlanishni
-                          o'rganasiz.
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Tanangiz, kayfiyatingizdagi o'zgarishlar va hayz
-                          davringizni tushuna boshlaysiz
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Hayzingiz qachon boshlanishini aniq bilib, stressiz
-                          yashaysiz.
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Juftingiz bilan ishonchli va ochiq munosabatlar
-                          o'rnatishga erishasiz.
-                        </span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* 2. Homilador bo'lishni xohlayotgan ayollar */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                <Card className="border-red-200 h-full">
-                  <CardHeader>
-                    <CardTitle className="text-red-900 text-center">
-                      Homilador bo'lishni xohlayotgan, ammo qiyinchiliklarga
-                      duch kelayotgan ayollar uchun
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Heart className="h-12 w-12 text-red-800" />
-                      </div>
-                    </div>
-                    <p className="text-gray-600 mb-4">
-                      Agar sizga aniq bepushtlik tashxisi qo'yilmagan bo'lsa,
-                      STM orqali tabiiy usulda farzandli bo'lish imkoniyatini
-                      oshirishingiz mumkin:
-                    </p>
-                    <ul className="space-y-2">
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Eng yuqori ehtimolli homiladorlik kunlarini
-                          aniqlaysiz.
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Homiladorlikning dastlabki 10 haftasida tanangiz
-                          resurslarini kuzatib borasiz.
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Tug'ish sanangizni homiladorlik yuzaga kelgan kundan
-                          boshlab hisoblay olasiz
-                        </span>
-                      </li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* 3. Yaqinda ona bo'lgan ayollar */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-              >
-                <Card className="border-red-200 h-full">
-                  <CardHeader>
-                    <CardTitle className="text-red-900 text-center">
-                      Yaqinda ona bo'lgan va darhol homilador bo'lishni
-                      istamaydigan ayollar uchun
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center mb-4">
-                      <div className="w-24 h-24 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <Award className="h-12 w-12 text-red-800" />
-                      </div>
-                    </div>
-                    <p className="text-gray-600 mb-4">
-                      Ko'plab emizikli onalar «emizish homiladorlikdan saqlaydi»
-                      degan noto'g'ri tushunchaga ega. STM yordamida siz:
-                    </p>
-                    <ul className="space-y-2">
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Hayzingiz hali tiklanmagan bo'lsa ham, 99.6% aniqlik
-                          bilan, keyingi homiladorlikni rejalashtira olasiz
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Tug'ruqdan keyingi birinchi ovulyatsiyangizni
-                          kuzatasiz.
-                        </span>
-                      </li>
-                      <li className="flex items-start">
-                        <CheckCircle className="h-4 w-4 text-red-800 mr-2 mt-1 flex-shrink-0" />
-                        <span className="text-sm">
-                          Organizmga zarar yetkazmaydigan va juftingiz bilan
-                          ishonchli munosabatda bo'lish imkonini beradigan
-                          tabiiy usuldan foydalanasiz.
-                        </span>
-                      </li>
-                    </ul>
                   </CardContent>
                 </Card>
               </motion.div>
