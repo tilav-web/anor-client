@@ -297,21 +297,21 @@ export default function HomePage() {
             <SheetContent
               side="right"
               className="bg-red-900 text-white border-none p-8"
+              onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <SheetHeader className="mb-8">
                 <SheetTitle className="text-white text-2xl font-bold text-left"></SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-3">
                 {navLinks.map((link) => (
-                  <button
-                    key={link.href}
-                    onClick={() => {
-                      window.location.href = link.href;
-                    }}
-                    className="text-2xl hover:underline underline-offset-4 text-left"
-                  >
-                    {link.label}
-                  </button>
+                  <SheetClose asChild key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-2xl hover:underline underline-offset-4 text-left"
+                    >
+                      {link.label}
+                    </Link>
+                  </SheetClose>
                 ))}
               </nav>
             </SheetContent>
