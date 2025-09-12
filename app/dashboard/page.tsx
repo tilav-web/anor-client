@@ -275,6 +275,7 @@ export default function DashboardPage() {
                                 type="password"
                                 placeholder="••••••••"
                                 {...field}
+                                autoComplete="new-password"
                               />
                             </FormControl>
                             <FormMessage />

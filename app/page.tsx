@@ -317,7 +317,7 @@ export default function HomePage() {
         {/* --- Hero Section --- */}
         <section className="relative w-full overflow-hidden">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
-            <div className="flex flex-col items-center justify-center h-full text-center text-red-900 pt-8">
+            <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
