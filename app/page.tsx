@@ -315,7 +315,7 @@ export default function HomePage() {
       </div>
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative w-full overflow-hidden">
+        <section className="relative w-full overflow-hidden px-2">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
             <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
               <motion.div
@@ -326,7 +326,7 @@ export default function HomePage() {
                 <img
                   src="/images/logo-decorated.png"
                   alt="Uyg'unlik Logo"
-                  className="h-14 md:h-24 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
+                  className="h-11 md:h-24 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.7))]"
                 />
               </motion.div>{" "}
               <motion.h1
