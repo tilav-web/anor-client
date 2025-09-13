@@ -339,8 +339,8 @@ export default function HomePage() {
       <main>
         {/* --- Hero Section --- */}
         <section className="relative w-full h-screen md:h-full">
-          <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
-            <div className="flex flex-col items-center justify-center text-center text-red-900 pt-8">
+          <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="flex flex-col items-center justify-center text-center text-[#5D1111] pt-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -361,7 +361,7 @@ export default function HomePage() {
                 Ayollik tabiatingiz bilan hamohanglikda yashang
               </motion.h1>
               <motion.p
-                className="mx-auto text-sm sm:text-lg font-bold md:text-xl text-red-900 mb-3"
+                className="mx-auto text-sm sm:text-lg font-bold md:text-xl mb-3"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -370,7 +370,7 @@ export default function HomePage() {
                 oling
               </motion.p>
               <motion.p
-                className="mx-auto border-t border-b border-red-900 max-w-[120px] w-full mb-2"
+                className="mx-auto border-t border-b border-[#5D1111] max-w-[120px] w-full mb-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -383,7 +383,7 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
                 className=""
               >
-                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-x-1">
+                <ul className="text-[#5D1111] flex items-center flex-col sm:flex-row gap-x-1">
                   <li className="font-bold">Start:</li>
                   <li>Yanvar, 2026</li>
                   <li className="font-bold">Davomiyligi:</li>
