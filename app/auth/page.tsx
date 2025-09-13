@@ -121,13 +121,6 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 mb-4">
-            <Heart className="h-8 w-8 text-red-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Uyg'unlik</h1>
-          </Link>
-        </div>
-
         <Card>
           <CardContent className="p-4">
             <Tabs defaultValue="login" className="w-full">
