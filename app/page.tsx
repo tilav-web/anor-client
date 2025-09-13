@@ -315,6 +315,22 @@ export default function HomePage() {
                     </Link>
                   </SheetClose>
                 ))}
+                <SheetClose asChild>
+                  <Link
+                    href={"/auth"}
+                    className="text-2xl hover:underline underline-offset-4 text-left"
+                  >
+                    Kirish
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    href={"/auth"}
+                    className="text-2xl hover:underline underline-offset-4 text-left"
+                  >
+                    Ro'yhatdan o'tish
+                  </Link>
+                </SheetClose>
               </nav>
             </SheetContent>
           </Sheet>
@@ -367,7 +383,7 @@ export default function HomePage() {
                 whileTap={{ scale: 0.95 }}
                 className=""
               >
-                <ul className="text-red-800 flex items-center flex-col sm:flex-row">
+                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-x-1">
                   <li className="font-bold">Start:</li>
                   <li>Yanvar, 2026</li>
                   <li className="font-bold">Davomiyligi:</li>
