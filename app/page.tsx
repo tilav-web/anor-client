@@ -382,7 +382,7 @@ export default function HomePage() {
               loop
               muted
               playsInline
-              className="w-full h-full object-cover md:static"
+              className="w-full h-full object-cover"
             ></video>
             <Link
               href={`${
