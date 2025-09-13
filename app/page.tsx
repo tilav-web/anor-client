@@ -322,7 +322,7 @@ export default function HomePage() {
       </div>
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative w-full overflow-hidden">
+        <section className="relative w-full mt-8 h-screen md:h-full">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
             <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
               <motion.div
@@ -369,7 +369,7 @@ export default function HomePage() {
               >
                 <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-1">
                   <li className="font-bold">Start:</li>
-                  <li>Avgust, 2025</li>
+                  <li>Yanvar, 2026</li>
                   <li className="font-bold">Davomiyligi:</li>
                   <li>8 hafta</li>
                 </ul>
@@ -382,7 +382,7 @@ export default function HomePage() {
               loop
               muted
               playsInline
-              className="w-full md:h-full h-[600px] sm:h-[700px] object-cover z-10"
+              className="w-full md:h-full h-[2100px] object-cover md:static"
             ></video>
             <Link
               href={`${
