@@ -324,7 +324,7 @@ export default function HomePage() {
         {/* --- Hero Section --- */}
         <section className="relative w-full h-screen md:h-full">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
-            <div className="flex flex-col items-center justify-center text-center text-red-900 bg-red-500 pt-8">
+            <div className="flex flex-col items-center justify-center text-center text-red-900 pt-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -385,12 +385,8 @@ export default function HomePage() {
               className="w-full h-full object-cover"
             ></video>
             <Link
-              href={`${
-                user
-                  ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning kursingizda ishtirok etmoqchiman.`
-                  : "/auth"
-              }`}
-              className="absolute h-44 w-44 border rounded-full bottom-40 z-50 flex items-center justify-center text-white"
+              href={"#pricing"}
+              className="absolute h-40 w-40 border rounded-full bottom-40 z-50 flex items-center justify-center text-white"
             >
               <p className="text-xl">
                 ISHTIROK <br /> ETAMAN
@@ -1291,11 +1287,7 @@ export default function HomePage() {
                       </li>
                     </ul>
                     <Link
-                      href={`${
-                        user
-                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning STANDART kursingizni sotib olmoqchiman.`
-                          : "/auth"
-                      }`}
+                      href={`https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men sizning STANDART kursingizni sotib olmoqchiman.`}
                       className="block pt-4"
                     >
                       <Button className="w-full bg-red-800 hover:bg-red-900">
@@ -1366,11 +1358,7 @@ export default function HomePage() {
                       </li>
                     </ul>
                     <Link
-                      href={`${
-                        user
-                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning OPTIMAL kursingizni sotib olmoqchiman.`
-                          : "/auth"
-                      }`}
+                      href={`https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men sizning OPTIMAL kursingizni sotib olmoqchiman.`}
                       className="block pt-4"
                     >
                       <Button className="w-full bg-red-800 hover:bg-red-900">
@@ -1448,11 +1436,7 @@ export default function HomePage() {
                       </li>
                     </ul>
                     <Link
-                      href={`${
-                        user
-                          ? `https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men ${user.first_name} ${user.last_name} sizning VIP kursingizni sotib olmoqchiman.`
-                          : "/auth"
-                      }`}
+                      href={`https://t.me/stm_kurs?text=Assalomu alaykum yaxshimisiz. Men sizning VIP kursingizni sotib olmoqchiman.`}
                       className="block pt-4"
                     >
                       <Button className="w-full bg-red-800 hover:bg-red-900">
