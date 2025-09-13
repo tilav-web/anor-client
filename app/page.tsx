@@ -322,9 +322,9 @@ export default function HomePage() {
       </div>
       <main>
         {/* --- Hero Section --- */}
-        <section className="relative w-full mt-8 h-screen md:h-full">
+        <section className="relative w-full h-screen md:h-full">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
-            <div className="flex flex-col items-center justify-center text-center text-red-900">
+            <div className="flex flex-col items-center justify-center text-center text-red-900 bg-red-500 pt-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -354,7 +354,7 @@ export default function HomePage() {
                 oling
               </motion.p>
               <motion.p
-                className="mx-auto border-t border-b border-red-900 max-w-[120px] w-full mb-6"
+                className="mx-auto border-t border-b border-red-900 max-w-[120px] w-full mb-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
@@ -365,9 +365,9 @@ export default function HomePage() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="mb-6"
+                className=""
               >
-                <ul className="text-red-800 flex items-center flex-col sm:flex-row gap-1">
+                <ul className="text-red-800 flex items-center flex-col sm:flex-row">
                   <li className="font-bold">Start:</li>
                   <li>Yanvar, 2026</li>
                   <li className="font-bold">Davomiyligi:</li>
