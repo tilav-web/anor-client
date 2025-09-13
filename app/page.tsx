@@ -324,7 +324,7 @@ export default function HomePage() {
         {/* --- Hero Section --- */}
         <section className="relative w-full mt-8 h-screen md:h-full">
           <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
-            <div className="flex flex-col items-center justify-center h-full text-center text-red-900">
+            <div className="flex flex-col items-center justify-center text-center text-red-900">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -382,7 +382,7 @@ export default function HomePage() {
               loop
               muted
               playsInline
-              className="w-full md:h-full h-[2100px] object-cover md:static"
+              className="w-full h-full object-cover md:static"
             ></video>
             <Link
               href={`${
