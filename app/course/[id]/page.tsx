@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -23,6 +23,8 @@ import Link from "next/link"
 import courseService from "@/services/course.service"
 import { Course } from "@/types/course"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.uygunlik.uz";
+
 export default function CoursePage() {
   const { id } = useParams();
   const [course, setCourse] = useState<Course | null>(null);
@@ -32,6 +34,8 @@ export default function CoursePage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0) // Will be set from fetched video
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     if (!id) return;
@@ -58,6 +62,36 @@ export default function CoursePage() {
     fetchCourse();
   }, [id]);
 
+  // Update video when currentVideoIndex changes
+  useEffect(() => {
+    if (videoRef.current && course?.videos && course.videos.length > 0) {
+      videoRef.current.load();
+    }
+  }, [currentVideoIndex, course]);
+
+  // Security measures for video protection
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => e.preventDefault();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === "PrintScreen" ||
+        (e.ctrlKey && e.key.toLowerCase() === "p") ||
+        (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(e.key.toLowerCase())) ||
+        e.key === "F12"
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Kurs yuklanmoqda...</div>;
   }
@@ -79,17 +113,31 @@ export default function CoursePage() {
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   // Map server videos to client lessons structure for display
-  const lessons = course.videos.map(video => ({
+  const lessons = course.videos ? course.videos.map((video, index) => ({
     id: video._id,
     title: video.title,
     duration: video.duration ? `${Math.floor(video.duration / 60)} min` : 'N/A',
     completed: false, // This would come from user progress data
     locked: false, // This would come from user access data
-    current: false, // This would come from user progress data
-  }));
+    current: index === currentVideoIndex, // Current video indicator
+  })) : [];
 
-  // Assuming the first video is the main one for the course page
-  const mainVideoUrl = course.videos.length > 0 ? course.videos[0].url : "/placeholder.svg";
+  // Get current video URL with streaming API
+  const mainVideoUrl = course.videos && course.videos.length > 0 
+    ? `${API_URL}/video-stream/stream/${course.videos[currentVideoIndex].url.split("/").pop()}`
+    : "/placeholder.svg";
+
+  const switchVideo = (index: number) => {
+    if (course.videos && index >= 0 && index < course.videos.length) {
+      setCurrentVideoIndex(index);
+      setIsPlaying(false);
+      setCurrentTime(0);
+      // Force video reload with new URL
+      if (videoRef.current) {
+        videoRef.current.load();
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,7 +150,7 @@ export default function CoursePage() {
           </Link>
           <div className="flex items-center space-x-4">
             <Badge variant="secondary" className="bg-red-100 text-red-800">
-              {course.category.join(', ')}
+              {course.category ? course.category.join(', ') : 'Kategoriya'}
             </Badge>
             <Link href="/dashboard">
               <Button variant="outline" size="sm">
@@ -121,17 +169,50 @@ export default function CoursePage() {
             <Card className="mb-6">
               <CardContent className="p-0">
                 <div className="relative bg-black rounded-t-lg overflow-hidden">
+                  {/* Watermark overlay */}
+                  <div
+                    className="absolute inset-0 z-10 pointer-events-none"
+                    style={{
+                      background:
+                        'url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' version=\'1.1\' height=\'100px\' width=\'100px\'><text x=\'0\' y=\'50\' fill=\'rgba(255,255,255,0.03)\' font-size=\'12\'>UYGUNLIK</text></svg>")',
+                      backgroundRepeat: "repeat",
+                    }}
+                  />
                   <div className="aspect-video flex items-center justify-center">
-                    <img
+                    <video
+                      ref={videoRef}
                       src={mainVideoUrl}
-                      alt="Video player"
                       className="w-full h-full object-cover"
+                      controls={false}
+                      controlsList="nodownload"
+                      disablePictureInPicture
+                      playsInline
+                      onLoadedMetadata={() => {
+                        if (videoRef.current) {
+                          setDuration(videoRef.current.duration);
+                        }
+                      }}
+                      onTimeUpdate={() => {
+                        if (videoRef.current) {
+                          setCurrentTime(videoRef.current.currentTime);
+                        }
+                      }}
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
                     />
                     <div className="absolute inset-0 flex items-center justify-center">
                       <Button
                         size="lg"
                         className="bg-red-600 hover:bg-red-700 rounded-full w-16 h-16"
-                        onClick={() => setIsPlaying(!isPlaying)}
+                        onClick={() => {
+                          if (videoRef.current) {
+                            if (isPlaying) {
+                              videoRef.current.pause();
+                            } else {
+                              videoRef.current.play();
+                            }
+                          }
+                        }}
                       >
                         {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
                       </Button>
@@ -141,24 +222,61 @@ export default function CoursePage() {
                   {/* Video Controls */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                     <div className="flex items-center space-x-4 text-white">
-                      <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-white hover:bg-white/20"
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10);
+                          }
+                        }}
+                      >
                         <SkipBack className="h-4 w-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
                         className="text-white hover:bg-white/20"
-                        onClick={() => setIsPlaying(!isPlaying)}
+                        onClick={() => {
+                          if (videoRef.current) {
+                            if (isPlaying) {
+                              videoRef.current.pause();
+                            } else {
+                              videoRef.current.play();
+                            }
+                          }
+                        }}
                       >
                         {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
-                      <Button size="sm" variant="ghost" className="text-white hover:bg-white/20">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="text-white hover:bg-white/20"
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.currentTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10);
+                          }
+                        }}
+                      >
                         <SkipForward className="h-4 w-4" />
                       </Button>
 
                       <div className="flex-1 flex items-center space-x-2">
                         <span className="text-sm">{formatTime(currentTime)}</span>
-                        <Progress value={progressPercentage} className="flex-1 h-1" />
+                        <Progress 
+                          value={progressPercentage} 
+                          className="flex-1 h-1 cursor-pointer"
+                          onClick={(e) => {
+                            if (videoRef.current && duration > 0) {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              const clickX = e.clientX - rect.left;
+                              const percentage = clickX / rect.width;
+                              videoRef.current.currentTime = percentage * duration;
+                            }
+                          }}
+                        />
                         <span className="text-sm">{formatTime(duration)}</span>
                       </div>
 
@@ -181,7 +299,7 @@ export default function CoursePage() {
                   <div>
                     <CardTitle className="text-2xl">{course.title}</CardTitle>
                     <CardDescription className="text-lg mt-2">
-                      {course.category.join(', ')} • {course.videos.length} ta dars
+                      {course.category ? course.category.join(', ') : 'Kategoriya'} • {course.videos ? course.videos.length : 0} ta dars
                     </CardDescription>
                   </div>
                   <Button className="bg-red-600 hover:bg-red-700">
@@ -205,7 +323,7 @@ export default function CoursePage() {
                 <div className="space-y-3">
                   {/* Assuming materials are part of the course object or fetched separately */}
                   {/* For now, using mock data or an empty array if not available */}
-                  {course.videos.map((video, index) => (
+                  {course.videos ? course.videos.map((video, index) => (
                     <div key={video._id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center space-x-3">
                         <BookOpen className="h-5 w-5 text-red-600" />
@@ -219,7 +337,7 @@ export default function CoursePage() {
                         Yuklab olish
                       </Button>
                     </div>
-                  ))}
+                  )) : null}
                 </div>
               </CardContent>
             </Card>
@@ -234,9 +352,10 @@ export default function CoursePage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {lessons.map((lesson) => (
+                  {lessons.map((lesson, index) => (
                     <div
                       key={lesson.id}
+                      onClick={() => switchVideo(index)}
                       className={`p-3 rounded-lg border cursor-pointer transition-colors ${
                         lesson.current
                           ? "bg-red-50 border-red-200"
